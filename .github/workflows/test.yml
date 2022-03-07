@@ -76,7 +76,7 @@ jobs:
           py.test --cov=./ --cov-report term --cov-report xml --cov-config .coveragerc tests
       - name: Codecov Upload
         continue-on-error: true
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2.1.0
         with:
           file: ./coverage.xml
           name: ${{ matrix.os }}-py${{ matrix.python-version }}
