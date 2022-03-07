@@ -66,3 +66,11 @@ show_error_codes = true
 warn_unused_configs = true
 warn_unused_ignores = true
 strict_equality = true
+disallow_untyped_defs=true
+disallow_incomplete_defs=true
+
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs=false
+disallow_incomplete_defs=false

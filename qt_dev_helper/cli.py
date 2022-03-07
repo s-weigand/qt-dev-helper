@@ -1,11 +1,14 @@
 """Console script for qt_dev_helper."""
+from typing import List
+from typing import Union
+
 import typer
 
 app = typer.Typer()
 
 
 @app.command()
-def main(args=None) -> int:
+def main(args: Union[List[str], None] = None) -> int:
     """Console script for qt_dev_helper.
 
     Parameters
