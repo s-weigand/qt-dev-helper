@@ -12,10 +12,7 @@ isort>=5.2.2
 pre-commit>=2.6.0
 pydocstyle>=5.0.2
 # docs requirements
-Sphinx>=3.2.0
-sphinx-rtd-theme>=0.3.1
-sphinx-copybutton>=0.2.5
-myst-parser>=0.12.0
+-r docs/requirements.txt
 # test requirements
 coverage>=4.5.1
 pytest>=4.0.0
