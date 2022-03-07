@@ -29,9 +29,6 @@ ignore-init-module = true
 
 [tool.coverage.run]
 branch = true
-include = [
-  'qt_dev_helper/*',
-]
 omit = [
   'setup.py',
   'qt_dev_helper/__init__.py',
