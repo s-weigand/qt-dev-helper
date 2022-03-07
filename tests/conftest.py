@@ -13,7 +13,7 @@ def dummy_config(tmp_path: Path):
     shutil.copytree(
         TEST_DATA,
         tmp_path,
-        ignore=shutil.ignore_patterns("outputs"),
+        ignore=shutil.ignore_patterns("expected"),
         dirs_exist_ok=True,
     )
 
