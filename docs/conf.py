@@ -53,6 +53,7 @@ source_suffix = [".rst", ".md"]
 linkcheck_ignore = [
     r"https://github\.com/s-weigand/qt-dev-helper/actions",
     r"https://github\.com/s-weigand/qt-dev-helper/workflows/Tests/badge\.svg",
+    r"https://raw\.githubusercontent\.com/*",
 ]
 
 # The master toctree document.

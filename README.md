@@ -1,8 +1,9 @@
 # Qt Dev Helper
 
-[![PyPi Version](https://img.shields.io/pypi/v/qt_dev_helper.svg)](https://pypi.org/project/qt-dev-helper/)
+<!-- [![PyPi Version](https://img.shields.io/pypi/v/qt_dev_helper.svg)](https://pypi.org/project/qt-dev-helper/)
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/qt-dev-helper.svg)](https://anaconda.org/conda-forge/qt-dev-helper)
-[![Supported Python Versions](https://img.shields.io/pypi/pyversions/qt_dev_helper.svg)](https://pypi.org/project/qt-dev-helper/)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/qt_dev_helper.svg)](https://pypi.org/project/qt-dev-helper/) -->
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 [![Actions Status](https://github.com/s-weigand/qt-dev-helper/workflows/Tests/badge.svg)](https://github.com/s-weigand/qt-dev-helper/actions)
