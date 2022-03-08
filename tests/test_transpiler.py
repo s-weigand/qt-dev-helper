@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
 from tests import EXPECTED_TEST_DATA
@@ -50,13 +49,12 @@ def test_tranpile_resource_file(dummy_config: Config):
     qrc_file = tmp_path / "inputs/test_resource.qrc"
     result = compile_resource_file(qrc_file, tmp_path / "resource.py")
 
-    assert result.read_text() == (EXPECTED_TEST_DATA / "test_resource.py").read_text()
+    assert "qt_resource_data" in result.read_text()
+    assert "qt_resource_name" in result.read_text()
+    assert "qt_resource_struct" in result.read_text()
 
     result = compile_resource_file(qrc_file, tmp_path / "resource.h", generator="cpp")
 
-    # comment_blank_line_pattern
-    cbl_pattern = re.compile(r"(\n\s*|\s*[/]{2}.+?)\n")
-
-    assert re.sub(cbl_pattern, "\n", result.read_text()) == re.sub(
-        cbl_pattern, "\n", (EXPECTED_TEST_DATA / "test_resource.h").read_text()
-    )
+    assert "static const unsigned char qt_resource_data[]" in result.read_text()
+    assert "static const unsigned char qt_resource_name[]" in result.read_text()
+    assert "static const unsigned char qt_resource_struct[]" in result.read_text()
