@@ -35,7 +35,10 @@ def test_extend_qt_tool_path_missing_module(monkeypatch: MonkeyPatch):
 
 def test_find_qt_tool():
     """When PySide6 is installed use rcc from the PySide6 package."""
-    assert "site-packages/pyside6/rcc" in find_qt_tool("rcc").lower()
+    assert (
+        "site-packages/pyside6/rcc" in find_qt_tool("rcc").lower()
+        or "site-packages/pyside6/qt/libexec/rcc" in find_qt_tool("rcc").lower()
+    )
 
 
 def test_find_qt_tool_not_found(monkeypatch: MonkeyPatch):
