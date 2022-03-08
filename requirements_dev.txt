@@ -11,6 +11,8 @@ typer==0.4.0
 
 # extra requirements
 PySide6==6.2.3
+qt5-applications
+qt6-applications
 
 # quality asurence
 black>=19.10b0
