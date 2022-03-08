@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import sys
 
 import pytest
 from _pytest.capture import CaptureFixture
@@ -35,7 +36,10 @@ def test_extend_qt_tool_path_missing_module(monkeypatch: MonkeyPatch):
 
 def test_find_qt_tool():
     """When PySide6 is installed use rcc from the PySide6 package."""
-    assert "site-packages/pyside6/rcc" in find_qt_tool("rcc").lower()
+    assert (
+        "site-packages/pyside6/rcc" in find_qt_tool("rcc").lower()
+        or "site-packages/pyside6/qt/libexec/rcc" in find_qt_tool("rcc").lower()
+    )
 
 
 def test_find_qt_tool_not_found(monkeypatch: MonkeyPatch):
@@ -53,6 +57,10 @@ def test_find_qt_tool_not_found(monkeypatch: MonkeyPatch):
         )
 
 
+@pytest.mark.skipif(
+    "CI" in os.environ and sys.platform == "win32",
+    reason="The on the windows github runner this opens a dialog which can't be closed.",
+)
 def test_call_qt_tool(capfd: CaptureFixture):
     """Basic test calling help on uic."""
     call_qt_tool("uic", arguments=("--help",))
@@ -60,6 +68,10 @@ def test_call_qt_tool(capfd: CaptureFixture):
     assert "Qt User Interface Compiler version" in capfd.readouterr().out
 
 
+@pytest.mark.skipif(
+    "CI" in os.environ and sys.platform == "win32",
+    reason="The on the windows github runner this opens a dialog which can't be closed.",
+)
 def test_call_qt_tool_exception():
     """Raise Except if arguments is of wrong type or bad options are passed."""
     with pytest.raises(ValueError) as exc_info:

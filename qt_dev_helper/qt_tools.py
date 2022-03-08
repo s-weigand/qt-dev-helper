@@ -52,11 +52,15 @@ def extend_qt_tool_path() -> str:
     """
     additional_paths: list[str] = []
     # package_name: rel_path_to_include
-    tool_packages = {"PySide6": "", "qt5_applications": "Qt/bin", "qt6_applications": "Qt/bin"}
-    for package, rel_path in tool_packages.items():
+    tool_packages = {
+        "PySide6": ["", "Qt/libexec"],
+        "qt6_applications": ["Qt/bin"],
+        "qt5_applications": ["Qt/bin"],
+    }
+    for package, rel_paths in tool_packages.items():
         try:
             with package_path(package, "__init__.py") as p:
-                additional_paths.append(str(p.parent / rel_path))
+                additional_paths += [str(p.parent / rel_path) for rel_path in rel_paths]
         except ModuleNotFoundError:
             pass
     return os.pathsep.join((*additional_paths, os.environ.get("path", "")))
@@ -111,7 +115,7 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = ()) -> None:
 
     cmd = " ".join((tool_exe, *arguments))
 
-    out = subprocess.run(cmd, capture_output=True)
+    out = subprocess.run(cmd, capture_output=True, shell=True)
 
     if out.returncode != 0:
         raise QtToolExecutionError(
