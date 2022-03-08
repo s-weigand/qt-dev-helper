@@ -111,7 +111,7 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = ()) -> None:
 
     cmd = " ".join((tool_exe, *arguments))
 
-    out = subprocess.run(cmd, capture_output=True)
+    out = subprocess.run(cmd, capture_output=True, shell=True)
 
     if out.returncode != 0:
         raise QtToolExecutionError(
