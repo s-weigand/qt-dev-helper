@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'minimal_ui.ui'
+## Form generated from reading UI file 'minimal.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.3
 ##
@@ -28,8 +28,10 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(310, 130, 181, 221))
-        self.label.setPixmap(QPixmap(u":/svg/circle.svg"))
+        self.label.setGeometry(QRect(310, 130, 221, 221))
+        self.label.setPixmap(QPixmap(u":/icons/icons/circle.svg"))
+        self.label.setScaledContents(True)
+        self.label.setAlignment(Qt.AlignCenter)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")

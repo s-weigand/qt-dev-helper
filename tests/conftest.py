@@ -19,6 +19,6 @@ def dummy_config(tmp_path: Path):
 
     yield Config(
         base_path=tmp_path,
-        root_sass_file="inputs/theme.scss",
+        root_sass_file="assets/styles/theme.scss",
         root_qss_file="outputs/theme.qss",
     )

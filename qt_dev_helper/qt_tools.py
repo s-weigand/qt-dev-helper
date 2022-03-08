@@ -48,7 +48,7 @@ def extend_qt_tool_path() -> str:
     Returns
     -------
     str
-        _description_
+        Path extended with library executable paths.
     """
     additional_paths: list[str] = []
     # package_name: rel_path_to_include

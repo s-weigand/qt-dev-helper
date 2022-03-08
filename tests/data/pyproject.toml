@@ -1,4 +1,5 @@
 
 [tool.qt-dev-helper]
-root_sass_file="inputs/theme.scss"
+# Style generator options
+root_sass_file="assets/styles/theme.scss"
 root_qss_file="outputs/theme.qss"
