@@ -21,4 +21,13 @@ def dummy_config(tmp_path: Path):
         base_path=tmp_path,
         root_sass_file="assets/styles/theme.scss",
         root_qss_file="outputs/theme.qss",
+        generator="python",
+        flatten_folder_structure=True,
+        ui_files_folder="assets/ui_files",
+        generated_ui_code_folder="outputs/ui_files",
+        uic_args=["--idbased"],
+        form_import=True,
+        resource_folder="assets",
+        generated_rc_code_folder="outputs/ui_files",
+        rcc_args=["--compress-algo", "zlib"],
     )
