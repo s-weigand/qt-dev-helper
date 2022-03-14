@@ -3,10 +3,17 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+from _pytest.capture import CaptureFixture
 from tests import EXPECTED_TEST_DATA
 from tests import INPUT_TEST_DATA
 
 from qt_dev_helper.config import Config
+from qt_dev_helper.config import RccKwargs
+from qt_dev_helper.config import UicKwargs
+from qt_dev_helper.transpiler import build_all_assets
+from qt_dev_helper.transpiler import build_resources
+from qt_dev_helper.transpiler import build_uis
 from qt_dev_helper.transpiler import compile_resource_file
 from qt_dev_helper.transpiler import compile_ui_file
 from qt_dev_helper.transpiler import transpile_sass
@@ -51,15 +58,15 @@ def test_tranpile_ui_file(dummy_config: Config):
     ui_file = tmp_path / "assets/ui_files/minimal.ui"
     result1 = compile_ui_file(ui_file, tmp_path / "default.py")
 
-    generated_files_equal(result1, EXPECTED_TEST_DATA / "minimal.py")
+    generated_files_equal(result1, EXPECTED_TEST_DATA / "Ui_minimal.py")
 
     result2 = compile_ui_file(ui_file, tmp_path / "default_no_from.py", form_import=False)
 
-    generated_files_equal(result2, (EXPECTED_TEST_DATA / "minimal_no_from_imports.py"))
+    generated_files_equal(result2, (EXPECTED_TEST_DATA / "Ui_minimal_no_from_imports.py"))
 
-    result3 = compile_ui_file(ui_file, tmp_path / "minimal.h", generator="cpp")
+    result3 = compile_ui_file(ui_file, tmp_path / "Ui_minimal.h", generator="cpp")
 
-    generated_files_equal(result3, EXPECTED_TEST_DATA / "minimal.h")
+    generated_files_equal(result3, EXPECTED_TEST_DATA / "Ui_minimal.h")
 
 
 def test_tranpile_resource_file(dummy_config: Config):
@@ -77,3 +84,136 @@ def test_tranpile_resource_file(dummy_config: Config):
     assert "static const unsigned char qt_resource_data[]" in result2.read_text()
     assert "static const unsigned char qt_resource_name[]" in result2.read_text()
     assert "static const unsigned char qt_resource_struct[]" in result2.read_text()
+
+
+@pytest.mark.parametrize(
+    "uic_kwargs, flatten_path, expected_rel_out_path, expected_file",
+    (
+        (
+            {"generator": "python", "form_import": True},
+            True,
+            "Ui_minimal.py",
+            "Ui_minimal.py",
+        ),
+        (
+            None,
+            True,
+            "Ui_minimal.py",
+            "Ui_minimal.py",
+        ),
+        (
+            {"generator": "python", "form_import": True},
+            False,
+            "ui_files/Ui_minimal.py",
+            "Ui_minimal.py",
+        ),
+        (
+            {"generator": "cpp", "form_import": True},
+            False,
+            "ui_files/Ui_minimal.h",
+            "Ui_minimal.h",
+        ),
+    ),
+)
+def test_build_uis(
+    dummy_config: Config,
+    capsys: CaptureFixture,
+    uic_kwargs: UicKwargs | None,
+    flatten_path: bool,
+    expected_rel_out_path: str,
+    expected_file: str,
+):
+    """Build ui files for whole folder."""
+    base_path = dummy_config.base_path
+
+    ui_files_folder, generated_ui_code_folder = dummy_config.ui_folder_paths()
+
+    result_paths_flat = build_uis(
+        ui_files_folder.parent,
+        generated_ui_code_folder,
+        flatten_path=flatten_path,
+        uic_kwargs=uic_kwargs,
+    )
+
+    assert len(result_paths_flat) == 1
+    assert base_path / f"outputs/ui_files/{expected_rel_out_path}" in result_paths_flat
+    generated_files_equal(result_paths_flat[0], EXPECTED_TEST_DATA / expected_file)
+
+    stdout, stderr = capsys.readouterr()
+
+    assert stderr == ""
+    assert stdout == f"Creating: {expected_rel_out_path}\n\n"
+
+
+@pytest.mark.parametrize(
+    "rcc_kwargs, flatten_path, expected_rel_out_path",
+    (
+        ({"generator": "python"}, True, "test_resource_rc.py"),
+        (None, True, "test_resource_rc.py"),
+        ({"generator": "python"}, False, "assets/test_resource_rc.py"),
+        ({"generator": "cpp"}, False, "assets/test_resource_rc.h"),
+    ),
+)
+def test_build_resources(
+    dummy_config: Config,
+    capsys: CaptureFixture,
+    rcc_kwargs: RccKwargs | None,
+    flatten_path: bool,
+    expected_rel_out_path: str,
+):
+    """Build resource files for whole folder."""
+    base_path = dummy_config.base_path
+
+    resource_folder, generated_rc_code_folder = dummy_config.rc_folder_paths()
+
+    result_paths_flat = build_resources(
+        resource_folder.parent,
+        generated_rc_code_folder,
+        flatten_path=flatten_path,
+        rcc_kwargs=rcc_kwargs,
+    )
+
+    assert len(result_paths_flat) == 1
+    assert base_path / f"outputs/ui_files/{expected_rel_out_path}" in result_paths_flat
+
+    stdout, stderr = capsys.readouterr()
+
+    assert stderr == ""
+    assert stdout == f"Creating: {expected_rel_out_path}\n\n"
+
+
+def test_build_all_assets_(dummy_config: Config, capsys: CaptureFixture):
+    dummy_config.uic_args = []
+    dummy_config.rcc_args = []
+    result = build_all_assets(dummy_config)
+
+    assert len(result) == 3
+
+    stdout, stderr = capsys.readouterr()
+
+    assert stderr == ""
+    assert stdout == "\n".join(
+        (
+            "Creating: outputs/theme.qss",
+            "Creating: Ui_minimal.py\n",
+            "Creating: test_resource_rc.py\n\n",
+        )
+    )
+
+
+def test_build_all_assets_no_config(tmp_path: Path, capsys: CaptureFixture):
+    empty_config = Config(base_path=tmp_path)
+    result = build_all_assets(empty_config)
+
+    assert len(result) == 0
+
+    stdout, stderr = capsys.readouterr()
+
+    assert stderr == ""
+    assert stdout == "\n".join(
+        (
+            "No style files to compile fund in config!",
+            "No ui folders fund in config!",
+            "No resource folders fund in config!\n",
+        )
+    )

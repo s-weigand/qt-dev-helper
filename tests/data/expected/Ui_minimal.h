@@ -6,8 +6,8 @@
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MINIMAL_H
-#define MINIMAL_H
+#ifndef UI_MINIMAL_H
+#define UI_MINIMAL_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
@@ -68,4 +68,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MINIMAL_H
+#endif // UI_MINIMAL_H

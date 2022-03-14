@@ -141,7 +141,7 @@ class CodeGenerators(Enum):
     cpp = "cpp"
 
 
-class UicKwargs(TypedDict):
+class UicKwargs(TypedDict, total=False):
     """Keyword arguments to be used with ``compile_ui_file``."""
 
     generator: Literal["python", "cpp"]
@@ -149,7 +149,7 @@ class UicKwargs(TypedDict):
     form_import: bool
 
 
-class RccKwargs(TypedDict):
+class RccKwargs(TypedDict, total=False):
     """Keyword arguments to be used with ``compile_resource_file``."""
 
     generator: Literal["python", "cpp"]
