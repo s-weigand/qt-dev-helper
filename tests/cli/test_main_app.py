@@ -8,7 +8,7 @@ import pytest
 from typer.testing import CliRunner
 
 # from qt_dev_helper import qt_dev_helper
-from qt_dev_helper import cli
+from qt_dev_helper.cli.main_app import app
 
 
 @pytest.fixture
@@ -30,9 +30,9 @@ def test_content(response):
 def test_command_line_interface():
     """Test the CLI."""
     runner = CliRunner()
-    result = runner.invoke(cli.app)
+    result = runner.invoke(app)
     assert result.exit_code == 0
     assert "qt_dev_helper.cli.main" in result.output
-    help_result = runner.invoke(cli.app, ["--help"])
+    help_result = runner.invoke(app, ["--help"])
     assert help_result.exit_code == 0
     assert re.search(r"--help\s+Show this message and exit.", help_result.output)

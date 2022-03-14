@@ -81,7 +81,7 @@ repos:
     rev: v1.8.1
     hooks:
       - id: darglint
-        exclude: "^docs|tests|setup.py"
+        exclude: "^docs|tests|setup.py|qt_dev_helper/cli"
 
   - repo: https://github.com/econchick/interrogate
     rev: 1.5.0

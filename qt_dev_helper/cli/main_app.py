@@ -1,10 +1,10 @@
-"""Console script for qt_dev_helper."""
+"""Main CLI application definition."""
 from typing import List
 from typing import Union
 
 import typer
 
-app = typer.Typer()
+app = typer.Typer(name="qt-dev-helper")
 
 
 @app.command()
