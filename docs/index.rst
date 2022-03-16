@@ -10,6 +10,7 @@ Welcome to Qt Dev Helper's documentation!
    installation
    usage
    cli
+   configuration
    api_docs
    contributing
    changelog
