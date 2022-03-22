@@ -94,13 +94,14 @@ def _check_input_exists(
     if input_var is None:
         return input_var
     input_var_path: Path = base_path / input_var
-    exception_msg = f"The value of {input_var_name!r} needs to be a valid path or None."
-    if is_file is True:
-        if not input_var_path.is_file():
-            raise ValueError(exception_msg)
-    else:
-        if not input_var_path.is_dir():
-            raise ValueError(exception_msg)
+    if (
+        is_file is True
+        and not input_var_path.is_file()
+        or is_file is not True
+        and not input_var_path.is_dir()
+    ):
+        exception_msg = f"The value of {input_var_name!r} needs to be a valid path or None."
+        raise ValueError(exception_msg)
     return input_var
 
 
@@ -305,6 +306,21 @@ class Config(BaseSettings):
             "generator": self.generator.value,
             "rcc_args": self.rcc_args,
         }
+
+    def deactivate_style_build(self) -> None:
+        """Deactivate style building with :func:`build_all_assets`."""
+        self.root_sass_file = None
+        self.root_qss_file = None
+
+    def deactivate_ui_build(self) -> None:
+        """Deactivate ui building with :func:`build_all_assets`."""
+        self.ui_files_folder = None
+        self.generated_ui_code_folder = None
+
+    def deactivate_resource_build(self) -> None:
+        """Deactivate resource building with :func:`build_all_assets`."""
+        self.resource_folder = None
+        self.generated_rc_code_folder = None
 
 
 def load_toml_config(path: Path) -> Config:

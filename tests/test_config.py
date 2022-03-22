@@ -140,6 +140,30 @@ def test_config_rcc_kwargs(dummy_config: Config):
     assert dummy_config.rcc_kwargs() == expected
 
 
+def test_config_deactivate_style_build(dummy_config: Config):
+    """Style related paths are ``None``."""
+    dummy_config.deactivate_style_build()
+
+    assert dummy_config.root_sass_file is None
+    assert dummy_config.root_qss_file is None
+
+
+def test_config_deactivate_ui_build(dummy_config: Config):
+    """Ui related paths are ``None``."""
+    dummy_config.deactivate_ui_build()
+
+    assert dummy_config.ui_files_folder is None
+    assert dummy_config.generated_ui_code_folder is None
+
+
+def test_config_deactivate_resource_build(dummy_config: Config):
+    """Resource related paths are ``None``."""
+    dummy_config.deactivate_resource_build()
+
+    assert dummy_config.resource_folder is None
+    assert dummy_config.generated_rc_code_folder is None
+
+
 def test_load_toml_config(dummy_config: Config):
     """Load config from test toml config."""
 

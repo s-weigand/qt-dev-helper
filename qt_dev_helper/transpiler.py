@@ -15,6 +15,7 @@ from qt_dev_helper.config import QtDevHelperConfigError
 from qt_dev_helper.config import RccKwargs
 from qt_dev_helper.config import UicKwargs
 from qt_dev_helper.qt_tools import call_qt_tool
+from qt_dev_helper.utils import find_matching_files
 from qt_dev_helper.utils import format_rel_output_path
 
 
@@ -129,6 +130,7 @@ def build_uis(
     flatten_path: bool = True,
     uic_kwargs: UicKwargs | None = None,
     log_function: Callable[..., None] = rich.print,
+    recurse_folder: bool = True,
 ) -> list[Path]:
     """Compile ui files by iterating over all ui files in a folder.
 
@@ -146,6 +148,8 @@ def build_uis(
         Keyword arguments passed to the uic executable. Defaults to None
     log_function: Callable[..., None]
         Function used to print log messages. Defaults to rich.print
+    recurse_folder: bool
+        Whether or not to recurse directories searching for files. Defaults to True
 
     Returns
     -------
@@ -159,10 +163,10 @@ def build_uis(
     built_files = []
     if uic_kwargs is None:
         uic_kwargs = {}
-    for ui_file in ui_files_folder.rglob("*.ui"):
+    for ui_file in find_matching_files([ui_files_folder], "*.ui", recurse_folder=recurse_folder):
         rel_out_path = format_rel_output_path(
             ui_files_folder,
-            ui_file,
+            Path(ui_file),
             "Ui_{file_stem}.py",
             flatten_path=flatten_path,
         )
@@ -182,6 +186,7 @@ def build_resources(
     flatten_path: bool = True,
     rcc_kwargs: RccKwargs | None = None,
     log_function: Callable[..., None] = rich.print,
+    recurse_folder: bool = True,
 ) -> list[Path]:
     """Compile qrc files by iterating over all qrc files in a folder.
 
@@ -199,6 +204,8 @@ def build_resources(
         Keyword arguments passed to the rcc executable. Defaults to None
     log_function: Callable[..., None]
         Function used to print log messages. Defaults to rich.print
+    recurse_folder: bool
+        Whether or not to recurse directories searching for files. Defaults to True
 
     Returns
     -------
@@ -208,10 +215,12 @@ def build_resources(
     built_files = []
     if rcc_kwargs is None:
         rcc_kwargs = {}
-    for resource_file in resource_folder.rglob("*.qrc"):
+    for resource_file in find_matching_files(
+        [resource_folder], "*.qrc", recurse_folder=recurse_folder
+    ):
         rel_out_path = format_rel_output_path(
             resource_folder,
-            resource_file,
+            Path(resource_file),
             "{file_stem}_rc.py",
             flatten_path=flatten_path,
         )
@@ -227,6 +236,7 @@ def build_resources(
 def build_all_assets(
     config: Config,
     log_function: Callable[..., None] = rich.print,
+    recurse_folder: bool = True,
 ) -> list[Path]:
     """Build all assets based on the provided configuration.
 
@@ -238,6 +248,8 @@ def build_all_assets(
         Configuration to use for building assets.
     log_function: Callable[..., None]
         Function used to print log messages. Defaults to rich.print
+    recurse_folder: bool
+        Whether or not to recurse directories searching for files. Defaults to True
 
     Returns
     -------
@@ -257,6 +269,7 @@ def build_all_assets(
             flatten_path=config.flatten_folder_structure,
             uic_kwargs=config.uic_kwargs(),
             log_function=log_function,
+            recurse_folder=recurse_folder,
         )
     except QtDevHelperConfigError:
         log_function("No ui folders fund in config!")
@@ -266,6 +279,7 @@ def build_all_assets(
             flatten_path=config.flatten_folder_structure,
             rcc_kwargs=config.rcc_kwargs(),
             log_function=log_function,
+            recurse_folder=recurse_folder,
         )
     except QtDevHelperConfigError:
         log_function("No resource folders fund in config!")
