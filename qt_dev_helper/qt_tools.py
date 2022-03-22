@@ -92,7 +92,7 @@ def find_qt_tool(tool_name: str) -> str:
     raise QtToolNotFoundError(tool_name)
 
 
-def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = ()) -> None:
+def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = (), no_wait: bool = False) -> None:
     """Call qt tools in a generic way.
 
     Parameters
@@ -101,6 +101,9 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = ()) -> None:
         Name of the Qt tool to use (e.g. ``rcc``, ``uic`` or ``designer``)
     arguments: Sequence[str]
         Additional arguments for options for the tool. Defaults to ()
+    no_wait: bool
+        Whether or not to wait for the process to finish
+        (used for CLI not to wait for designer application to close). Defaults to False
 
     Raises
     ------
@@ -115,11 +118,21 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = ()) -> None:
 
     cmd = " ".join((tool_exe, *arguments))
 
-    out = subprocess.run(cmd, capture_output=True, shell=True)
-
-    if out.returncode != 0:
-        raise QtToolExecutionError(
-            returncode=out.returncode, cmd=cmd, stdout=out.stdout, stderr=out.stderr
+    if no_wait is True:
+        subprocess.Popen(
+            cmd,
+            shell=True,
+            stdin=None,
+            stdout=None,
+            stderr=None,
+            close_fds=True,
         )
+    else:
+        out = subprocess.run(cmd, capture_output=True, shell=True)
 
-    print(out.stdout.decode())
+        if out.returncode != 0:
+            raise QtToolExecutionError(
+                returncode=out.returncode, cmd=cmd, stdout=out.stdout, stderr=out.stderr
+            )
+
+        print(out.stdout.decode())

@@ -283,7 +283,7 @@ class Config(BaseSettings):
             Keyword arguments for ``compile_ui_file``.
         """
         return {
-            "generator": self.generator.value,  # type:ignore[typeddict-item]
+            "generator": self.generator.value,
             "form_import": self.form_import,
             "uic_args": self.uic_args,
         }
@@ -297,7 +297,7 @@ class Config(BaseSettings):
             Keyword arguments for ``compile_resource_file``.
         """
         return {
-            "generator": self.generator.value,  # type:ignore[typeddict-item]
+            "generator": self.generator.value,
             "rcc_args": self.rcc_args,
         }
 

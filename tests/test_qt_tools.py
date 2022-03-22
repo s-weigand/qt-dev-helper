@@ -59,7 +59,7 @@ def test_find_qt_tool_not_found(monkeypatch: MonkeyPatch):
 
 @pytest.mark.skipif(
     "CI" in os.environ and sys.platform == "win32",
-    reason="The on the windows github runner this opens a dialog which can't be closed.",
+    reason="On the windows github runner this opens a dialog which can't be closed.",
 )
 def test_call_qt_tool(capfd: CaptureFixture):
     """Basic test calling help on uic."""
@@ -68,9 +68,16 @@ def test_call_qt_tool(capfd: CaptureFixture):
     assert "Qt User Interface Compiler version" in capfd.readouterr().out
 
 
+def test_call_qt_tool_no_wait(capfd: CaptureFixture):
+    """Do not wait for process to finish."""
+    call_qt_tool("uic", arguments=("--help",), no_wait=True)
+
+    assert capfd.readouterr().out == ""
+
+
 @pytest.mark.skipif(
     "CI" in os.environ and sys.platform == "win32",
-    reason="The on the windows github runner this opens a dialog which can't be closed.",
+    reason="On the windows github runner this opens a dialog which can't be closed.",
 )
 def test_call_qt_tool_exception():
     """Raise Except if arguments is of wrong type or bad options are passed."""
