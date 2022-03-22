@@ -1,5 +1,13 @@
 name: "Tests"
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - v**
+    branches-ignore:
+      - "dependabot/**"
+      - "sourcery/**"
+      - "create-pr-action/**"
+  pull_request:
 
 jobs:
   pre-commit:
