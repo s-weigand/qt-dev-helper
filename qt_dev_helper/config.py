@@ -13,6 +13,7 @@ from typing import TypedDict
 
 import tomli
 from pydantic import BaseSettings
+from pydantic import Extra
 from pydantic import Field
 from pydantic import root_validator
 from pydantic import validator
@@ -162,7 +163,7 @@ class RccKwargs(TypedDict, total=False):
     rcc_args: List[str]
 
 
-class Config(BaseSettings):
+class Config(BaseSettings, extra=Extra.forbid):
     """Project configuration."""
 
     base_path: Path = Field(
@@ -321,6 +322,25 @@ class Config(BaseSettings):
         """Deactivate resource building with :func:`build_all_assets`."""
         self.resource_folder = None
         self.generated_rc_code_folder = None
+
+    def update(self, update_dict: Dict[str, Any], filter_none: bool = True) -> None:
+        """Update config values.
+
+        Parameters
+        ----------
+        update_dict: Dict[str, Any]
+            Dict containing updated values.
+        filter_none: bool
+            Whether or not to filter None values before updating. Defaults to True
+        """
+        if filter_none is True:
+            update_dict = {key: value for key, value in update_dict.items() if value is not None}
+
+        # This ensures validation of the updated values
+        updated_config = self.__class__(**{**self.dict(), **update_dict})
+
+        for key, val in updated_config.dict().items():
+            setattr(self, key, val)
 
 
 def load_toml_config(path: Path) -> Config:

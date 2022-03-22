@@ -60,6 +60,7 @@ exclude_lines = [
 
 
 [tool.mypy]
+plugins = "pydantic.mypy"
 exclude = "^docs/"
 ignore_missing_imports = true
 scripts_are_modules = true

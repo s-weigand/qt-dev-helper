@@ -164,6 +164,32 @@ def test_config_deactivate_resource_build(dummy_config: Config):
     assert dummy_config.generated_rc_code_folder is None
 
 
+def test_config_update(dummy_config: Config):
+    """Update values if not None."""
+    dummy_config.update(
+        {"generator": "cpp", "flatten_folder_structure": False, "root_sass_file": None},
+    )
+
+    assert dummy_config.generator.value == "cpp"
+    assert dummy_config.flatten_folder_structure is False
+    assert dummy_config.root_sass_file == "assets/styles/theme.scss"
+
+
+def test_config_update_errors(dummy_config: Config):
+    """."""
+    with pytest.raises(ValidationError) as exec_info:
+        dummy_config.update({"root_sass_file": None}, filter_none=False)
+
+    assert "The values of 'root_sass_file' and 'root_qss_file' need either be both" in str(
+        exec_info.value
+    )
+
+    with pytest.raises(ValidationError) as exec_info:
+        dummy_config.update({"invalid_name": "foo"})
+
+    assert "extra fields not permitted" in str(exec_info.value)
+
+
 def test_load_toml_config(dummy_config: Config):
     """Load config from test toml config."""
 
