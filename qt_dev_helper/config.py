@@ -1,5 +1,6 @@
 """Configuration module."""
 
+import os
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -18,7 +19,11 @@ from pydantic import validator
 
 
 class QtDevHelperConfigError(Exception):
-    """Error thing when accessing functionality with insufficient config."""
+    """Error thrown when accessing functionality with insufficient config."""
+
+
+class ConfigNotFoundError(Exception):
+    """Error thrown when the config file could not be found."""
 
 
 def _check_symmetric_io_definition(
@@ -314,7 +319,76 @@ def load_toml_config(path: Path) -> Config:
     -------
     Config
         Configuration instance generate from toml definition.
+
+    Raises
+    ------
+    ConfigNotFoundError
+        If no config file does not contain 'qt-dev-helper' config.
     """
     toml_config = tomli.loads(path.read_text())
     qt_dev_helper_config = toml_config.get("tool", {}).get("qt-dev-helper", {})
-    return Config(**{**qt_dev_helper_config, "base_path": path.parent})
+    if len(qt_dev_helper_config) > 0:
+        return Config(**{**qt_dev_helper_config, "base_path": path.parent})
+    raise ConfigNotFoundError(f"Could not find 'qt-dev-helper' config in {path.as_posix()}")
+
+
+def find_config(
+    start_path: Optional[Path] = None, config_file_name: str = "pyproject.toml"
+) -> Path:
+    """Find config file based on its name and start path, by traversing parent paths.
+
+    Parameters
+    ----------
+    start_path: Optional[Path]
+        Path to start looking for the config file.
+        Defaults to None which means the current dir will be used
+    config_file_name: str
+        Name of the config file. Defaults to "pyproject.toml"
+
+    Returns
+    -------
+    Path
+        Path of the found config file
+
+    Raises
+    ------
+    ConfigNotFoundError
+        If no config file could be found.
+    """
+    if start_path is None:
+        start_path = Path(os.curdir)
+
+    for path in (start_path, *start_path.parents):
+        file_path = path / config_file_name
+        if file_path in set(path.iterdir()):
+            return file_path
+    raise ConfigNotFoundError(f"Could not find config file {config_file_name!r}.")
+
+
+def load_config(start_path: Optional[Path] = None) -> Config:
+    """Load config from file.
+
+    Parameters
+    ----------
+    start_path: Optional[Path]
+        Path to start looking for the config file.
+        Defaults to None which means the current dir will be used
+
+    Returns
+    -------
+    Config
+        Configuration instance generate from file.
+
+    Raises
+    ------
+    ConfigNotFoundError
+        If no config file containing 'qt-dev-helper' config could be found.
+    """
+    supported_config_formats = (("pyproject.toml", load_toml_config),)
+    for config_file_name, load_func in supported_config_formats:
+        try:
+            return load_func(find_config(start_path, config_file_name))
+        except ConfigNotFoundError:
+            continue
+
+    raise ConfigNotFoundError("No config file containing 'qt-dev-helper' config could be found.")

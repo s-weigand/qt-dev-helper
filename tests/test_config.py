@@ -1,15 +1,21 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 from pydantic import ValidationError
+from tests import REPO_ROOT
 from tests import TEST_DATA
 
 from qt_dev_helper.config import Config
+from qt_dev_helper.config import ConfigNotFoundError
 from qt_dev_helper.config import QtDevHelperConfigError
 from qt_dev_helper.config import RccKwargs
 from qt_dev_helper.config import UicKwargs
+from qt_dev_helper.config import find_config
+from qt_dev_helper.config import load_config
 from qt_dev_helper.config import load_toml_config
 
 
@@ -137,7 +143,9 @@ def test_config_rcc_kwargs(dummy_config: Config):
 def test_load_toml_config(dummy_config: Config):
     """Load config from test toml config."""
 
-    assert load_toml_config(dummy_config.base_path / "pyproject.toml") == dummy_config
+    assert (
+        load_toml_config(dummy_config.base_path / "pyproject.toml").dict() == dummy_config.dict()
+    )
 
 
 def test_load_toml_config_no_tool_config(tmp_path: Path):
@@ -145,4 +153,57 @@ def test_load_toml_config_no_tool_config(tmp_path: Path):
     config_file = tmp_path / "pyproject.toml"
     config_file.write_text("[tool.black]\nline-length = 99")
 
-    assert load_toml_config(config_file) == Config(base_path=config_file.parent)
+    with pytest.raises(ConfigNotFoundError) as exec_info:
+        load_toml_config(config_file)
+
+    assert str(exec_info.value).startswith("Could not find 'qt-dev-helper' config in ")
+
+
+@pytest.mark.parametrize(
+    "start_path, config_file_name, expected",
+    (
+        (REPO_ROOT, "pyproject.toml", REPO_ROOT / "pyproject.toml"),
+        (REPO_ROOT, "setup.cfg", REPO_ROOT / "setup.cfg"),
+        (TEST_DATA, "pyproject.toml", TEST_DATA / "pyproject.toml"),
+        (TEST_DATA.parent, "pyproject.toml", REPO_ROOT / "pyproject.toml"),
+        (None, "pyproject.toml", REPO_ROOT / "pyproject.toml"),
+    ),
+)
+def test_find_config(
+    monkeypatch: MonkeyPatch, start_path: Path, config_file_name: str, expected: Path
+):
+    """Find config file using different start paths or file names."""
+    with monkeypatch.context() as m:
+        m.setattr(os, "curdir", Path(__file__).parent.as_posix())
+        result = find_config(start_path, config_file_name)
+
+        assert result.samefile(expected)
+
+
+def test_find_config_error(tmp_path: Path):
+    """Raise error if file can not be found."""
+    with pytest.raises(ConfigNotFoundError) as exec_info:
+        find_config(tmp_path)
+
+    assert str(exec_info.value) == "Could not find config file 'pyproject.toml'."
+
+
+def test_load_config(dummy_config: Config):
+    """On error parsing config."""
+
+    result = load_config(dummy_config.base_path)
+
+    assert result.dict() == dummy_config.dict()
+
+
+def test_load_config_error(dummy_config: Config):
+    """On error parsing config."""
+    config_file = dummy_config.base_path / "pyproject.toml"
+    config_file.write_text("[tool.black]\nline-length = 99")
+
+    with pytest.raises(ConfigNotFoundError) as exec_info:
+        load_config(dummy_config.base_path)
+
+    assert (
+        str(exec_info.value) == "No config file containing 'qt-dev-helper' config could be found."
+    )
