@@ -10,7 +10,7 @@ from _pytest.monkeypatch import MonkeyPatch
 from tests.conftest import CallQtToolKwargs
 from typer.testing import CliRunner
 
-import qt_dev_helper.cli.designer as designer_cli_module
+import qt_dev_helper.cli.commands.designer as designer_cli_module
 from qt_dev_helper.cli.main_app import app
 
 

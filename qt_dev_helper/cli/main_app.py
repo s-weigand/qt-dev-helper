@@ -4,7 +4,7 @@ from typing import Union
 
 import typer
 
-from qt_dev_helper.cli.designer import designer
+from qt_dev_helper.cli.commands.designer import designer
 
 app = typer.Typer(
     name="qt-dev-helper",
