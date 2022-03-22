@@ -72,7 +72,7 @@ def compile_ui_file(
         Path of the compiled file
     """
     options = ["-g", generator]
-    if generator == "python" and form_import is True:
+    if generator == "python" and form_import:
         options.append("--from-imports")
 
     output_path = Path(output_path)
