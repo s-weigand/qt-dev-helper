@@ -242,7 +242,7 @@ def test_build_all_assets_as_packaging_buildsystem(dummy_config: Config):
     qt_dev_helper_requirement = f"qt-dev-helper@{REPO_ROOT.resolve().as_uri()}"
 
     toml_config = tomli.loads(pyproject_toml_path.read_text())
-    toml_config["build-system"]["requires"].append(qt_dev_helper_requirement)
+    toml_config["build-system"]["requires"][-1] = qt_dev_helper_requirement
     toml_config["tool"]["qt-dev-helper"]["uic_args"] = []
     toml_config["tool"]["qt-dev-helper"]["rcc_args"] = []
 
