@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 99
-target-version = ['py36', 'py37', 'py38']
+target-version = ['py38']
 exclude = '''
 /(
     \.eggs
@@ -33,6 +33,7 @@ omit = [
   'setup.py',
   'qt_dev_helper/__init__.py',
   'tests/*',
+  'qt_dev_helper/cli/_cli_docs.py'
 # comment the above line if you want to see if all tests did run
   ]
 
@@ -59,6 +60,7 @@ exclude_lines = [
 
 
 [tool.mypy]
+plugins = "pydantic.mypy"
 exclude = "^docs/"
 ignore_missing_imports = true
 scripts_are_modules = true

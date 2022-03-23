@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'minimal_ui.ui'
+** Form generated from reading UI file 'minimal.ui'
 **
 ** Created by: Qt User Interface Compiler version 6.2.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MINIMAL_UI_H
-#define MINIMAL_UI_H
+#ifndef UI_MINIMAL_H
+#define UI_MINIMAL_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
@@ -36,8 +36,10 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         label = new QLabel(centralwidget);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(310, 130, 181, 221));
-        label->setPixmap(QPixmap(QString::fromUtf8(":/svg/circle.svg")));
+        label->setGeometry(QRect(310, 130, 221, 221));
+        label->setPixmap(QPixmap(QString::fromUtf8(":/icons/icons/circle.svg")));
+        label->setScaledContents(true);
+        label->setAlignment(Qt::AlignCenter);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -66,4 +68,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MINIMAL_UI_H
+#endif // UI_MINIMAL_H

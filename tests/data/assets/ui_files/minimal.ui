@@ -19,7 +19,7 @@
      <rect>
       <x>310</x>
       <y>130</y>
-      <width>181</width>
+      <width>221</width>
       <height>221</height>
      </rect>
     </property>
@@ -27,7 +27,13 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="test_resource.qrc">:/svg/circle.svg</pixmap>
+     <pixmap resource="../test_resource.qrc">:/icons/icons/circle.svg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
@@ -44,7 +50,7 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
-  <include location="test_resource.qrc"/>
+  <include location="../test_resource.qrc"/>
  </resources>
  <connections/>
 </ui>

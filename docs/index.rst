@@ -9,6 +9,8 @@ Welcome to Qt Dev Helper's documentation!
    readme
    installation
    usage
+   cli
+   configuration
    api_docs
    contributing
    changelog

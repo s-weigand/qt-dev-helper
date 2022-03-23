@@ -3,5 +3,5 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).parent.parent
 TEST_DATA = REPO_ROOT / "tests/data"
-INPUT_TEST_DATA = REPO_ROOT / "tests/data/inputs"
+INPUT_TEST_DATA = REPO_ROOT / "tests/data/assets"
 EXPECTED_TEST_DATA = REPO_ROOT / "tests/data/expected"
