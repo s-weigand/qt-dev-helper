@@ -396,6 +396,8 @@ def find_config(
         start_path = Path(os.curdir)
 
     start_path = Path(start_path).resolve()
+    if start_path.is_file():
+        start_path = start_path.parent
 
     for path in (start_path, *start_path.parents):
         file_path = path / config_file_name
