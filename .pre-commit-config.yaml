@@ -1,4 +1,4 @@
-exclude: ^tests/data/expected/.+$
+exclude: ^tests/data/(expected/.+|setup.py)$
 
 repos:
   ###################

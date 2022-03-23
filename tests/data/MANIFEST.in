@@ -1,0 +1,7 @@
+recursive-include assets *
+recursive-include outputs *
+include pyproject.toml
+
+recursive-include tests *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
