@@ -26,6 +26,8 @@ remove_redundant_aliases = true
 [tool.interrogate]
 exclude = ["setup.py", "docs", "tests"]
 ignore-init-module = true
+ignore-regex = [".*QtToolNotFoundError.*", ".*QtToolExecutionError.*"]
+fail-under = 100
 
 [tool.coverage.run]
 branch = true
