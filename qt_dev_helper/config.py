@@ -171,12 +171,12 @@ class Config(BaseSettings, extra=Extra.forbid):
     )
     # Style generator options
     root_sass_file: Optional[str] = Field(
-        default=None, description="Scss stylesheet with the style for the while application."
+        default=None, description="Scss stylesheet with the style for the whole application."
     )
     root_qss_file: Optional[str] = Field(
         default=None,
         description=(
-            "Scss stylesheet with the style for the while application, "
+            "Qss stylesheet with the style for the while application, "
             "generated from 'root_sass_file'."
         ),
     )
@@ -393,6 +393,8 @@ def find_config(
     """
     if start_path is None:
         start_path = Path(os.curdir)
+
+    start_path = start_path.resolve()
 
     for path in (start_path, *start_path.parents):
         file_path = path / config_file_name
