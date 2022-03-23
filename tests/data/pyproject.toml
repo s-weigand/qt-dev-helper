@@ -1,3 +1,9 @@
+[build-system]
+# needs to be extendetc with local path to qt-dev-helper
+# qt-dev-helper@file:///<qt-dev-helper local path>
+requires = ["setuptools","PySide6 >=2.2.3"]
+build-backend = "setuptools.build_meta"
+
 
 [tool.qt-dev-helper]
 # Style generator options

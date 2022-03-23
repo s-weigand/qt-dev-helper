@@ -1,12 +1,19 @@
 from __future__ import annotations
 
+import os
 import re
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
+import tomli
+import tomli_w
 from _pytest.capture import CaptureFixture
 from tests import EXPECTED_TEST_DATA
 from tests import INPUT_TEST_DATA
+from tests import REPO_ROOT
 
 from qt_dev_helper.config import Config
 from qt_dev_helper.config import RccKwargs
@@ -221,3 +228,49 @@ def test_build_all_assets_no_config(tmp_path: Path, capsys: CaptureFixture):
             "No resource folders fund in config!\n",
         )
     )
+
+
+@pytest.mark.skipif(
+    "CI" not in os.environ,
+    reason="This test takes very long and problems should be cover by different tests as well.",
+)
+def test_build_all_assets_as_packaging_buildsystem(dummy_config: Config):
+    """All resources are in the wheel."""
+
+    pyproject_toml_path = dummy_config.base_path / "pyproject.toml"
+
+    qt_dev_helper_requirement = f"qt-dev-helper@{REPO_ROOT.resolve().as_uri()}"
+
+    toml_config = tomli.loads(pyproject_toml_path.read_text())
+    toml_config["build-system"]["requires"].append(qt_dev_helper_requirement)
+    toml_config["tool"]["qt-dev-helper"]["uic_args"] = []
+    toml_config["tool"]["qt-dev-helper"]["rcc_args"] = []
+
+    pyproject_toml_path.write_text(tomli_w.dumps(toml_config))
+
+    subprocess.run(
+        " ".join([sys.executable, "-m", "pip", "wheel", ".", "--no-deps"]),
+        cwd=dummy_config.base_path,
+        check=True,
+    )
+
+    wheel_path = dummy_config.base_path / "outputs-0.0.1-py3-none-any.whl"
+    dist_path = dummy_config.base_path / "dist"
+
+    assert wheel_path.is_file() is True
+
+    shutil.unpack_archive(wheel_path, dist_path, format="zip")
+
+    qss_file = dist_path / "outputs/theme.qss"
+    assert qss_file.is_file()
+    assert qss_file.read_text() == (EXPECTED_TEST_DATA / "theme.qss").read_text()
+
+    ui_file = dist_path / "outputs/ui_files/Ui_minimal.py"
+    assert ui_file.is_file()
+    generated_files_equal(ui_file, EXPECTED_TEST_DATA / "Ui_minimal.py")
+
+    rc_file = dist_path / "outputs/ui_files/test_resource_rc.py"
+    assert rc_file.is_file()
+    assert "qt_resource_data" in rc_file.read_text()
+    assert "qt_resource_name" in rc_file.read_text()
+    assert "qt_resource_struct" in rc_file.read_text()
