@@ -238,10 +238,11 @@ def test_find_config_error(tmp_path: Path):
     assert str(exec_info.value) == "Could not find config file 'pyproject.toml'."
 
 
-def test_load_config(dummy_config: Config):
-    """On error parsing config."""
+@pytest.mark.parametrize("rel_path", ("", "assets/styles/theme.scss"))
+def test_load_config(dummy_config: Config, rel_path: str):
+    """Load config also works when path is a file which isn't the config file."""
 
-    result = load_config(dummy_config.base_path)
+    result = load_config(dummy_config.base_path / rel_path)
 
     assert result.dict() == dummy_config.dict()
 

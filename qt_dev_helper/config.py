@@ -10,6 +10,7 @@ from typing import Literal
 from typing import Optional
 from typing import Tuple
 from typing import TypedDict
+from typing import Union
 
 import tomli
 from pydantic import BaseSettings
@@ -369,13 +370,13 @@ def load_toml_config(path: Path) -> Config:
 
 
 def find_config(
-    start_path: Optional[Path] = None, config_file_name: str = "pyproject.toml"
+    start_path: Optional[Union[Path, str]] = None, config_file_name: str = "pyproject.toml"
 ) -> Path:
     """Find config file based on its name and start path, by traversing parent paths.
 
     Parameters
     ----------
-    start_path: Optional[Path]
+    start_path: Optional[Union[Path,str]]
         Path to start looking for the config file.
         Defaults to None which means the current dir will be used
     config_file_name: str
@@ -394,7 +395,9 @@ def find_config(
     if start_path is None:
         start_path = Path(os.curdir)
 
-    start_path = start_path.resolve()
+    start_path = Path(start_path).resolve()
+    if start_path.is_file():
+        start_path = start_path.parent
 
     for path in (start_path, *start_path.parents):
         file_path = path / config_file_name
@@ -403,12 +406,12 @@ def find_config(
     raise ConfigNotFoundError(f"Could not find config file {config_file_name!r}.")
 
 
-def load_config(start_path: Optional[Path] = None) -> Config:
+def load_config(start_path: Optional[Union[Path, str]] = None) -> Config:
     """Load config from file.
 
     Parameters
     ----------
-    start_path: Optional[Path]
+    start_path: Optional[Union[Path,str]]
         Path to start looking for the config file.
         Defaults to None which means the current dir will be used
 
