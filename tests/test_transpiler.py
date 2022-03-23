@@ -182,10 +182,13 @@ def test_build_resources(
     assert stdout == f"Creating: {expected_rel_out_path}\n\n"
 
 
-def test_build_all_assets_(dummy_config: Config, capsys: CaptureFixture):
+@pytest.mark.parametrize("use_path", (True, False))
+def test_build_all_assets_(dummy_config: Config, capsys: CaptureFixture, use_path: bool):
+    """Files are build when definitions are in the config."""
     dummy_config.uic_args = []
     dummy_config.rcc_args = []
-    result = build_all_assets(dummy_config)
+
+    result = build_all_assets(dummy_config.base_path if use_path is True else dummy_config)
 
     assert len(result) == 3
 
@@ -202,6 +205,7 @@ def test_build_all_assets_(dummy_config: Config, capsys: CaptureFixture):
 
 
 def test_build_all_assets_no_config(tmp_path: Path, capsys: CaptureFixture):
+    """No error if parts of the config are missing."""
     empty_config = Config(base_path=tmp_path)
     result = build_all_assets(empty_config)
 

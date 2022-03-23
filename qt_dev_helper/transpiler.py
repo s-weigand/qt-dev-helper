@@ -14,6 +14,7 @@ from qt_dev_helper.config import Config
 from qt_dev_helper.config import QtDevHelperConfigError
 from qt_dev_helper.config import RccKwargs
 from qt_dev_helper.config import UicKwargs
+from qt_dev_helper.config import load_config
 from qt_dev_helper.qt_tools import call_qt_tool
 from qt_dev_helper.utils import find_matching_files
 from qt_dev_helper.utils import format_rel_output_path
@@ -234,7 +235,7 @@ def build_resources(
 
 
 def build_all_assets(
-    config: Config,
+    config: Config | str | Path,
     log_function: Callable[..., None] = rich.print,
     recurse_folder: bool = True,
 ) -> list[Path]:
@@ -246,6 +247,7 @@ def build_all_assets(
     ----------
     config: Config
         Configuration to use for building assets.
+        If a path is passed it will try to find the config.
     log_function: Callable[..., None]
         Function used to print log messages. Defaults to rich.print
     recurse_folder: bool
@@ -255,7 +257,13 @@ def build_all_assets(
     -------
     list[Path]
         List of generated files.
+
+    See Also
+    --------
+    .load_config
     """
+    if not isinstance(config, Config):
+        config = load_config(config)
     built_files = []
     try:
         sass_file, qss_file = config.root_style_paths()
