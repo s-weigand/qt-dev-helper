@@ -1,7 +1,4 @@
 # Qt Dev Helper
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <!-- [![PyPi Version](https://img.shields.io/pypi/v/qt_dev_helper.svg)](https://pypi.org/project/qt-dev-helper/)
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/qt-dev-helper.svg)](https://anaconda.org/conda-forge/qt-dev-helper)
