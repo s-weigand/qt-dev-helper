@@ -252,6 +252,7 @@ def test_build_all_assets_as_packaging_buildsystem(dummy_config: Config):
         " ".join([sys.executable, "-m", "pip", "wheel", ".", "--no-deps"]),
         cwd=dummy_config.base_path,
         check=True,
+        shell=True,
     )
 
     wheel_path = dummy_config.base_path / "outputs-0.0.1-py3-none-any.whl"
