@@ -1,6 +1,8 @@
 """Qt implementation cross compatibility module."""
+
 from __future__ import annotations
 
+import contextlib
 import os
 import shutil
 import subprocess
@@ -58,11 +60,9 @@ def extend_qt_tool_path() -> str:
         "qt5_applications": ["Qt/bin"],
     }
     for package, rel_paths in tool_packages.items():
-        try:
+        with contextlib.suppress(ModuleNotFoundError):
             with package_path(package, "__init__.py") as p:
                 additional_paths += [str(p.parent / rel_path) for rel_path in rel_paths]
-        except ModuleNotFoundError:
-            pass
     return os.pathsep.join((*additional_paths, os.environ.get("path", "")))
 
 
