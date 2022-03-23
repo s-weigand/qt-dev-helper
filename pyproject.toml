@@ -36,6 +36,7 @@ omit = [
   'qt_dev_helper/__init__.py',
   'qt_dev_helper/cli/_cli_docs.py',
   '**/pip-*',
+  '**/pytest-*/*',
   'tests/*',
 # comment the above line if you want to see if all tests did run
   ]
