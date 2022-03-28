@@ -5,7 +5,7 @@ wheel>=0.33.6
 # pinned so the bot can create PRs to test with new versions
 
 pydantic==1.9.0
-rich==12.0.0
+rich==12.0.1
 tomli==2.0.1
 typer==0.4.0
 qtsass==0.3.0 ;python_version < '3.10'
