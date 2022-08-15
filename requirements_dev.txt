@@ -4,7 +4,7 @@ wheel>=0.33.6
 # runtime requirements
 # pinned so the bot can create PRs to test with new versions
 
-pydantic==1.9.1
+pydantic==1.9.2
 rich==12.4.4
 tomli==2.0.1
 typer==0.4.1
