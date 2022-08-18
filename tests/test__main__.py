@@ -9,4 +9,6 @@ def test_module_invocation():
     result = subprocess.run([sys.executable, "-m", "qt_dev_helper", "--help"], capture_output=True)
 
     assert result.returncode == 0
-    assert re.search(r"--help\s+Show this message and exit.", result.stdout.decode())
+    assert re.search(
+        r"--help\s+Show this message and exit.", result.stdout.decode()
+    ), result.stdout.decode()
