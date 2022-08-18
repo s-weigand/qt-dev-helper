@@ -17,4 +17,6 @@ def test_main():
     assert "Collection of CLI commands" in result.output
     help_result = runner.invoke(app, ["--help"])
     assert help_result.exit_code == 0
-    assert re.search(r"--help\s+Show this message and exit.", help_result.output)
+    assert re.search(
+        r"--help.*?Show this message and exit\.", help_result.output
+    ), help_result.output
