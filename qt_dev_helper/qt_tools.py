@@ -66,7 +66,7 @@ def extend_qt_tool_path() -> str:
     return os.pathsep.join((*additional_paths, os.environ.get("path", "")))
 
 
-@lru_cache()
+@lru_cache
 def find_qt_tool(tool_name: str) -> str:
     """Find path to Qt tool executable like ``rcc``, ``uic`` or ``designer``.
 
