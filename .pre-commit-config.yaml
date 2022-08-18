@@ -1,4 +1,6 @@
 exclude: ^tests/data/(expected/.+|setup.py)$
+default_language_version:
+  python: python3.8
 
 repos:
   ###################
@@ -19,7 +21,7 @@ repos:
     rev: v2.37.3
     hooks:
       - id: pyupgrade
-        args: [--py37-plus]
+        args: [--py38-plus]
 
   - repo: https://github.com/MarcoGorelli/absolufy-imports
     rev: v0.3.1
