@@ -10,5 +10,5 @@ def test_module_invocation():
 
     assert result.returncode == 0
     assert re.search(
-        r"--help\s+Show this message and exit.", result.stdout.decode()
+        r"--help.*?Show this message and exit\.", result.stdout.decode()
     ), result.stdout.decode()
