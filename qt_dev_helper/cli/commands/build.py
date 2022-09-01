@@ -60,7 +60,7 @@ def build(
     ),
     uic_args: Optional[str] = Option(
         default=None,
-        help="Additional arguments for the uic executable, as commaseperated list.",
+        help="Additional arguments for the uic executable, as comma separated list.",
     ),
     rc: bool = Option(
         default=True,
@@ -82,7 +82,7 @@ def build(
     ),
     rcc_args: Optional[str] = Option(
         default=None,
-        help="Additional arguments for the rcc executable, as commaseperated list.",
+        help="Additional arguments for the rcc executable, as comma separated list.",
     ),
     qss: bool = Option(
         default=True,
