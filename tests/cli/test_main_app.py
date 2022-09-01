@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-"""Tests for `qt_dev_helper` package."""
+"""Tests for the `qt_dev_helper``` cli main command."""
 
 import re
 import sys
