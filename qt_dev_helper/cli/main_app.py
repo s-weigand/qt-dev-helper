@@ -4,7 +4,7 @@ try:
     import typer
 except ImportError as error:
     raise ImportError(
-        "The requirements for the cli usage aren't installed.\n"
+        "The requirements for the cli usage are not installed.\n"
         "Install qt-dev-helper with the cli extras e.g.:\n"
         "`pip install qt-dev-helper[cli]`"
     ) from error

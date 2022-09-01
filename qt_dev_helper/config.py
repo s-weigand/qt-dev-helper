@@ -177,7 +177,7 @@ class Config(BaseSettings, extra=Extra.forbid):
     root_qss_file: Optional[str] = Field(
         default=None,
         description=(
-            "Qss stylesheet with the style for the while application, "
+            "Qss stylesheet with the style for the whole application, "
             "generated from 'root_sass_file'."
         ),
     )
@@ -418,7 +418,7 @@ def load_config(start_path: Optional[Union[Path, str]] = None) -> Config:
     Returns
     -------
     Config
-        Configuration instance generate from file.
+        Configuration instance generated from file.
 
     Raises
     ------

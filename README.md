@@ -16,7 +16,7 @@
 
 [![Code style Python: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Toolbox to help developing Qt applications improving the usability of the existing tooling.
+Toolbox to help develop Qt applications, improving the usability of the existing tooling.
 
 ## Features
 
@@ -30,8 +30,8 @@ Toolbox to help developing Qt applications improving the usability of the existi
   - `*.qrc` -> `*.py`
   - `*.ui` -> `*.h`
   - `*.qrc` -> `*.h`
-  - `*.sass` -> `*.qss`
-- Support for multiple Qt tooling supplier
+  - `*.scss` -> `*.qss`
+- Support for multiple Qt tooling suppliers
   - `PySide6-Essentials`
   - `qt6-applications`
   - `qt5-applications`
@@ -39,8 +39,8 @@ Toolbox to help developing Qt applications improving the usability of the existi
 
 ## Planned features
 
-- Stand alone executable for each release (windows)
-- Watch mode
+- Stand alone executable for each release (Windows)
+- File watch mode
 - `qss` injection into `*.ui` files
 - [`pre-commit`](https://pre-commit.com/) hooks
 
@@ -60,7 +60,7 @@ pip install qt-dev-helper
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes out to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -76,4 +76,4 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind are welcome!

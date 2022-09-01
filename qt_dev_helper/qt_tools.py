@@ -28,7 +28,7 @@ class QtToolNotFoundError(Exception):
 
 
 class QtToolExecutionError(Exception):
-    """Error thrown when a Qt tool can't be found.
+    """Error thrown when a Qt tool returns a non-zero exit status code.
 
     See Also
     --------
@@ -110,7 +110,7 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = (), no_wait: bool
     ValueError
         If ``arguments`` is not of type Sequence[str]
     QtToolExecutionError
-        If the tool return an exit code other than 0.
+        If the tool returns a non-zero exit code.
     """
     if not isinstance(arguments, Sequence) or isinstance(arguments, str):
         raise ValueError(f"arguments needs to be of type Sequence[str],\n Got:\n\t{arguments=}")

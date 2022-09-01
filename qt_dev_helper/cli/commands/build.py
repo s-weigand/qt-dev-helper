@@ -97,7 +97,7 @@ def build(
     root_qss_file: Optional[Path] = Option(
         default=None,
         help=(
-            "Qss stylesheet with the style for the while application, "
+            "Qss stylesheet with the style for the whole application, "
             "generated from 'root_sass_file'."
         ),
     ),
