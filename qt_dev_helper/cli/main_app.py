@@ -1,6 +1,13 @@
 """Main CLI application definition."""
 
-import typer
+try:
+    import typer
+except ImportError as error:
+    raise ImportError(
+        "The requirements for the cli usage aren't installed.\n"
+        "Install qt-dev-helper with the cli extras e.g.:\n"
+        "`pip install qt-dev-helper[cli]`"
+    ) from error
 
 from qt_dev_helper.cli.commands.build import build
 from qt_dev_helper.cli.commands.designer import designer
