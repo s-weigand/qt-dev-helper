@@ -1,8 +1,9 @@
 # Qt Dev Helper
 
 <!-- [![PyPi Version](https://img.shields.io/pypi/v/qt_dev_helper.svg)](https://pypi.org/project/qt-dev-helper/)
-[![Conda Version](https://img.shields.io/conda/vn/conda-forge/qt-dev-helper.svg)](https://anaconda.org/conda-forge/qt-dev-helper)
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/qt_dev_helper.svg)](https://pypi.org/project/qt-dev-helper/) -->
+
+<!-- [![Conda Version](https://img.shields.io/conda/vn/conda-forge/qt-dev-helper.svg)](https://anaconda.org/conda-forge/qt-dev-helper) -->
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -15,18 +16,51 @@
 
 [![Code style Python: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Tool to help developing Qt applications
-
-- Free software: Apache Software License 2.0
-- Documentation: https://qt-dev-helper.readthedocs.io.
+Toolbox to help develop Qt applications, improving the usability of the existing tooling.
 
 ## Features
 
-- TODO
+- Usable as Library and/or CLI tool
+- Compatible with [PEP517](https://peps.python.org/pep-0517/) build system
+  ([see test case](https://github.com/s-weigand/qt-dev-helper/blob/main/tests/data/pyproject.toml))
+- CLI auto completion
+- Project wide configuration in `pyproject.toml`
+- Recursive asset compiler for Qt projects (using `uic` and `rcc`):
+  - `*.ui` -> `*.py`
+  - `*.qrc` -> `*.py`
+  - `*.ui` -> `*.h`
+  - `*.qrc` -> `*.h`
+  - `*.scss` -> `*.qss`
+- Support for multiple Qt tooling suppliers
+  - `PySide6-Essentials`
+  - `qt6-applications`
+  - `qt5-applications`
+- Ability to open all files in a folder in QtDesigner
+
+## Planned features
+
+- Stand alone executable for each release (Windows)
+- File watch mode
+- `qss` injection into `*.ui` files
+- [`pre-commit`](https://pre-commit.com/) hooks
+
+## Installation
+
+```console
+pip install qt-dev-helper
+```
+
+## FAQ
+
+- Q: Why is `PyQt5` not supported?
+
+  A: `PyQt5` only ships a python specific version of `uic` and `rcc` breaking the tool API and
+  compatibility with cpp projects.
+  Use the matching version of `qt5-applications` as Qt tooling supplier.
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes out to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -42,4 +76,4 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind are welcome!

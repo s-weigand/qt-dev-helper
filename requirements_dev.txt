@@ -3,7 +3,6 @@ pip>=19.2.3
 wheel>=0.33.6
 # runtime requirements
 # pinned so the bot can create PRs to test with new versions
-
 pydantic==1.9.2
 rich==12.5.1
 tomli==2.0.1
@@ -16,7 +15,7 @@ PySide6==6.3.1
 qt5-applications
 qt6-applications
 
-# quality asurence
+# quality assurance
 black>=19.10b0
 flake8>=3.8.0
 isort>=5.2.2

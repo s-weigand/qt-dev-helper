@@ -60,7 +60,7 @@ def build(
     ),
     uic_args: Optional[str] = Option(
         default=None,
-        help="Additional arguments for the uic executable, as commaseperated list.",
+        help="Additional arguments for the uic executable, as comma separated list.",
     ),
     rc: bool = Option(
         default=True,
@@ -82,7 +82,7 @@ def build(
     ),
     rcc_args: Optional[str] = Option(
         default=None,
-        help="Additional arguments for the rcc executable, as commaseperated list.",
+        help="Additional arguments for the rcc executable, as comma separated list.",
     ),
     qss: bool = Option(
         default=True,
@@ -97,7 +97,7 @@ def build(
     root_qss_file: Optional[Path] = Option(
         default=None,
         help=(
-            "Qss stylesheet with the style for the while application, "
+            "Qss stylesheet with the style for the whole application, "
             "generated from 'root_sass_file'."
         ),
     ),

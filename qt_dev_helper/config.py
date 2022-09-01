@@ -9,6 +9,7 @@ from typing import List
 from typing import Literal
 from typing import Optional
 from typing import Tuple
+from typing import Type
 from typing import TypedDict
 from typing import Union
 
@@ -26,6 +27,22 @@ class QtDevHelperConfigError(Exception):
 
 class ConfigNotFoundError(Exception):
     """Error thrown when the config file could not be found."""
+
+
+def _str_list_factory(*args: Any) -> List[str]:
+    """Ensure that a list of arbitrary argument is List[str].
+
+    Parameters
+    ----------
+    args: Any
+        Arbitrary arguments.
+
+    Returns
+    -------
+    List[str]
+        List of ``args`` cast to string.
+    """
+    return [str(arg) for arg in args]
 
 
 def _check_symmetric_io_definition(
@@ -142,7 +159,7 @@ def expand_io_paths(
     return base_path / input_var, base_path / output_var
 
 
-class CodeGenerators(Enum):
+class CodeGenerators(str, Enum):
     """Valid code generator values."""
 
     python = "python"
@@ -177,13 +194,14 @@ class Config(BaseSettings, extra=Extra.forbid):
     root_qss_file: Optional[str] = Field(
         default=None,
         description=(
-            "Qss stylesheet with the style for the while application, "
+            "Qss stylesheet with the style for the whole application, "
             "generated from 'root_sass_file'."
         ),
     )
     # General Qt code generator options
     generator: CodeGenerators = Field(
-        default="python", description="Code generator used to compile ui and resource files."
+        default=CodeGenerators.python,
+        description="Code generator used to compile ui and resource files.",
     )
     flatten_folder_structure: bool = Field(
         default=True, description="Whether to keep the original folder structure or flatten it."
@@ -196,7 +214,8 @@ class Config(BaseSettings, extra=Extra.forbid):
         default=None, description="Root folder to save code generated from *.ui files to."
     )
     uic_args: List[str] = Field(
-        default_factory=list, description="Additional arguments for the uic executable."
+        default_factory=_str_list_factory,
+        description="Additional arguments for the uic executable.",
     )
     form_import: bool = Field(default=True, description="Python: generate imports relative to '.'")
     # Qt rc code generator options
@@ -207,12 +226,13 @@ class Config(BaseSettings, extra=Extra.forbid):
         default=None, description="Root folder to save code generated from *.qrc files to."
     )
     rcc_args: List[str] = Field(
-        default_factory=list, description="Additional arguments for the rcc executable."
+        default_factory=_str_list_factory,
+        description="Additional arguments for the rcc executable.",
     )
 
     @validator("root_sass_file")
     def _validate_style_input_path(
-        cls: "Config", root_sass_file: str, values: Dict[str, Any]
+        cls: Type["Config"], root_sass_file: str, values: Dict[str, Any]
     ) -> Optional[str]:
         """Validate that ``root_sass_file`` is a valid path if defined."""
         return _check_input_exists(
@@ -221,14 +241,14 @@ class Config(BaseSettings, extra=Extra.forbid):
 
     @validator("ui_files_folder")
     def _validate_ui_input_path(
-        cls: "Config", ui_files_folder: str, values: Dict[str, Any]
+        cls: Type["Config"], ui_files_folder: str, values: Dict[str, Any]
     ) -> Optional[str]:
         """Validate that ``ui_files_folder`` is a valid path if defined."""
         return _check_input_exists(ui_files_folder, "ui_files_folder", values["base_path"])
 
     @validator("resource_folder")
     def _validate_rc_input_path(
-        cls: "Config", resource_folder: str, values: Dict[str, Any]
+        cls: Type["Config"], resource_folder: str, values: Dict[str, Any]
     ) -> Optional[str]:
         """Validate that ``resource_folder`` is a valid path if defined."""
         return _check_input_exists(resource_folder, "resource_folder", values["base_path"])
@@ -418,7 +438,7 @@ def load_config(start_path: Optional[Union[Path, str]] = None) -> Config:
     Returns
     -------
     Config
-        Configuration instance generate from file.
+        Configuration instance generated from file.
 
     Raises
     ------
