@@ -91,6 +91,26 @@ jobs:
           file: ./coverage.xml
           name: ${{ matrix.os }}-py${{ matrix.python-version }}
 
+  test-linux-docker:
+    runs-on: ubuntu-latest
+    container: python:3.9-slim-buster
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - run: |
+          cd tests/data
+          pip install .
+
+  test-windows-docker:
+    runs-on: windows-latest
+    container: python:3.9-windowsservercore-ltsc2022
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - run: |
+          cd tests/data
+          pip install .
+
   deploy:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
