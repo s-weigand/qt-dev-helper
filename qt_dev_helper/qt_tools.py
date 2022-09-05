@@ -56,14 +56,15 @@ def extend_qt_tool_path() -> str:
     # package_name: rel_path_to_include
     tool_packages = {
         "PySide6": ["", "Qt/libexec"],
-        "qt6_applications": ["Qt/bin"],
-        "qt5_applications": ["Qt/bin"],
+        "shiboken6": [""],
+        "qt6_applications": ["Qt/bin", "Qt/lib"],
+        "qt5_applications": ["Qt/bin", "Qt/lib"],
     }
     for package, rel_paths in tool_packages.items():
         with contextlib.suppress(ModuleNotFoundError):
             with package_path(package, "__init__.py") as p:
                 additional_paths += [str(p.parent / rel_path) for rel_path in rel_paths]
-    return os.pathsep.join((*additional_paths, os.environ.get("path", "")))
+    return os.pathsep.join((*additional_paths, os.environ.get("PATH", "")))
 
 
 @lru_cache
@@ -118,17 +119,15 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = (), no_wait: bool
 
     cmd = " ".join((tool_exe, *arguments))
 
+    env = os.environ.copy()
+    env["PATH"] = extend_qt_tool_path()
+
     if no_wait is True:
         subprocess.Popen(
-            cmd,
-            shell=True,
-            stdin=None,
-            stdout=None,
-            stderr=None,
-            close_fds=True,
+            cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True, env=env
         )
     else:
-        out = subprocess.run(cmd, capture_output=True, shell=True)
+        out = subprocess.run(cmd, capture_output=True, shell=True, env=env)
 
         if out.returncode != 0:
             raise QtToolExecutionError(
