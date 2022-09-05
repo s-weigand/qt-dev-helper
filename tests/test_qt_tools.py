@@ -31,7 +31,7 @@ def test_extend_qt_tool_path_missing_module(monkeypatch: MonkeyPatch):
 
         m.setattr(qt_tools, "package_path", mock_package_path)
 
-        assert extend_qt_tool_path.__wrapped__() == os.environ.get("path", "")
+        assert extend_qt_tool_path.__wrapped__() == os.environ.get("PATH", "")
 
 
 def test_find_qt_tool():
