@@ -93,23 +93,21 @@ jobs:
 
   test-linux-docker:
     runs-on: ubuntu-latest
-    container: python:3.9-slim-buster
+    container: python:3.9-bullseye
     steps:
       - name: Check out repo
         uses: actions/checkout@v3
       - run: |
           cd tests/data
-          pip install .
+          python -m pip install .
 
   test-windows-docker:
-    runs-on: windows-latest
-    container: python:3.9-windowsservercore-ltsc2022
+    runs-on: windows-2022
     steps:
       - name: Check out repo
         uses: actions/checkout@v3
       - run: |
-          cd tests/data
-          pip install .
+          docker run -it -d -v ./tests/data:/data -w /data python:3.9-windowsservercore-ltsc2022 'python -m pip install .'
 
   # deploy:
   #   runs-on: ubuntu-latest
