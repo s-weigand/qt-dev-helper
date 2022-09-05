@@ -1,6 +1,7 @@
 """Module containing the CLI build command implementations."""
 import os
 from pathlib import Path
+from typing import List
 from typing import Optional
 
 from typer import Argument
@@ -101,6 +102,15 @@ def build(
             "generated from 'root_sass_file'."
         ),
     ),
+    prefix_paths: Optional[List[str]] = Option(
+        default=None,
+        help=("Paths to look for qt tooling executables and shared objects."),
+    ),
+    use_prefix_paths: bool = Option(
+        default=True,
+        is_flag=True,
+        help=("Whether or not to use prefix paths defined in the config."),
+    ),
 ) -> None:
     """Build production assets from input files."""
     try:
@@ -110,6 +120,13 @@ def build(
 
     if base_path is not None:
         config_obj.base_path = base_path
+
+    # Typer converts Optional[List[str]] to an empty list if None
+    if len(prefix_paths) == 0:  # type:ignore[arg-type]
+        prefix_paths = None
+
+    if use_prefix_paths is False:
+        prefix_paths = []
 
     config_obj.update(
         {
@@ -124,6 +141,7 @@ def build(
             "rcc_args": parse_optional_args_string(rcc_args),
             "root_sass_file": root_sass_file,
             "root_qss_file": root_qss_file,
+            "prefix_paths": prefix_paths,
         }
     )
 

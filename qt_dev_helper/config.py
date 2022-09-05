@@ -229,6 +229,10 @@ class Config(BaseSettings, extra=Extra.forbid):
         default_factory=_str_list_factory,
         description="Additional arguments for the rcc executable.",
     )
+    prefix_paths: List[str] = Field(
+        default_factory=_str_list_factory,
+        description="Paths to look for qt tooling executables and shared objects.",
+    )
 
     @validator("root_sass_file")
     def _validate_style_input_path(

@@ -34,6 +34,7 @@ def dummy_config(tmp_path: Path):
         resource_folder="assets",
         generated_rc_code_folder="outputs/ui_files",
         rcc_args=["--compress-algo", "zlib"],
+        prefix_paths=["C:/Qt", "/usr/lib/x86_64-linux-gnu/qt6"],
     )
 
 

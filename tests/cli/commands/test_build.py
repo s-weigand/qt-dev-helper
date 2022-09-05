@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Any
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
@@ -33,15 +34,16 @@ def test_build(monkeypatch: MonkeyPatch, dummy_config: Config):
 
 
 @pytest.mark.parametrize(
-    "flag, none_attr_names",
+    "flag, replace_attrs",
     (
-        ("--no-ui", ("ui_files_folder", "generated_ui_code_folder")),
-        ("--no-rc", ("resource_folder", "generated_rc_code_folder")),
-        ("--no-qss", ("root_sass_file", "root_qss_file")),
+        ("--no-ui", {"ui_files_folder": None, "generated_ui_code_folder": None}),
+        ("--no-rc", {"resource_folder": None, "generated_rc_code_folder": None}),
+        ("--no-qss", {"root_sass_file": None, "root_qss_file": None}),
+        ("--no-use-prefix-paths", {"prefix_paths": []}),
     ),
 )
 def test_build_cli_deactivate(
-    monkeypatch: MonkeyPatch, dummy_config: Config, flag: str, none_attr_names: tuple[str, str]
+    monkeypatch: MonkeyPatch, dummy_config: Config, flag: str, replace_attrs: dict[str, Any]
 ):
     """Deactivate build parts."""
     runner = CliRunner()
@@ -60,13 +62,16 @@ def test_build_cli_deactivate(
         result_cfg = call_kwargs["config"].dict()
         expected_cfg = dummy_config.dict()
 
-        for none_attr_name in none_attr_names:
-            assert result_cfg[none_attr_name] is None
+        for key, value in replace_attrs.items():
+            if value is None:
+                assert result_cfg[key] is value
+            else:
+                assert result_cfg[key] == value
 
-            del result_cfg[none_attr_name]
-            del expected_cfg[none_attr_name]
+            del result_cfg[key]
+            del expected_cfg[key]
 
-        assert result_cfg == expected_cfg
+        assert result_cfg == expected_cfg, result.stdout
 
 
 @pytest.mark.parametrize("pass_base_path", (True, False))

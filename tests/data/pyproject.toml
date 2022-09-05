@@ -21,3 +21,5 @@ form_import=true
 resource_folder="assets"
 generated_rc_code_folder="outputs/ui_files"
 rcc_args=["--compress-algo", "zlib"]
+# Paths to look for qt tooling executables and shared objects.
+prefix_paths=["C:/Qt","/usr/lib/x86_64-linux-gnu/qt6"]
