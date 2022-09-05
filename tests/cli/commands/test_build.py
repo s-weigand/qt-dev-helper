@@ -39,7 +39,7 @@ def test_build(monkeypatch: MonkeyPatch, dummy_config: Config):
         ("--no-ui", {"ui_files_folder": None, "generated_ui_code_folder": None}),
         ("--no-rc", {"resource_folder": None, "generated_rc_code_folder": None}),
         ("--no-qss", {"root_sass_file": None, "root_qss_file": None}),
-        ("--no-use-prefix-paths", {"prefix_paths": []}),
+        ("--no-use-prefix-paths", {"prefix_paths": ()}),
     ),
 )
 def test_build_cli_deactivate(

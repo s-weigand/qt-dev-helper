@@ -103,7 +103,7 @@ def build(
         ),
     ),
     prefix_paths: Optional[List[str]] = Option(
-        default=None,
+        default=[],
         help=("Paths to look for qt tooling executables and shared objects."),
     ),
     use_prefix_paths: bool = Option(

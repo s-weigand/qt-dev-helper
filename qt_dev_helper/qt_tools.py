@@ -44,7 +44,7 @@ class QtToolExecutionError(Exception):
 
 
 @lru_cache(maxsize=1)
-def extend_qt_tool_path() -> str:
+def extend_qt_tool_path(prefix_paths: Sequence[str] = ()) -> str:
     """Prepend path variable with package dirs to qt-tools if present.
 
     Returns
@@ -64,11 +64,11 @@ def extend_qt_tool_path() -> str:
         with contextlib.suppress(ModuleNotFoundError):
             with package_path(package, "__init__.py") as p:
                 additional_paths += [str(p.parent / rel_path) for rel_path in rel_paths]
-    return os.pathsep.join((*additional_paths, os.environ.get("PATH", "")))
+    return os.pathsep.join((*prefix_paths, *additional_paths, os.environ.get("PATH", "")))
 
 
 @lru_cache
-def find_qt_tool(tool_name: str) -> str:
+def find_qt_tool(tool_name: str, prefix_paths: Sequence[str] = ()) -> str:
     """Find path to Qt tool executable like ``rcc``, ``uic`` or ``designer``.
 
     Parameters
@@ -86,14 +86,20 @@ def find_qt_tool(tool_name: str) -> str:
     QtToolNotFoundError
         If the tool could not be found in the path.
     """
-    extended_path = extend_qt_tool_path()
+    extended_path = extend_qt_tool_path(prefix_paths)
     command_path = shutil.which(tool_name, path=extended_path)
     if command_path is not None:
         return Path(command_path).as_posix()
     raise QtToolNotFoundError(tool_name)
 
 
-def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = (), no_wait: bool = False) -> None:
+def call_qt_tool(
+    tool_name: str,
+    *,
+    prefix_paths: Sequence[str] = (),
+    arguments: Sequence[str] = (),
+    no_wait: bool = False,
+) -> None:
     """Call qt tools in a generic way.
 
     Parameters
@@ -115,12 +121,12 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = (), no_wait: bool
     """
     if not isinstance(arguments, Sequence) or isinstance(arguments, str):
         raise ValueError(f"arguments needs to be of type Sequence[str],\n Got:\n\t{arguments=}")
-    tool_exe = find_qt_tool(tool_name)
+    tool_exe = find_qt_tool(tool_name, prefix_paths)
 
     cmd = " ".join((tool_exe, *arguments))
 
     env = os.environ.copy()
-    env["PATH"] = extend_qt_tool_path()
+    env["PATH"] = extend_qt_tool_path(prefix_paths)
 
     if no_wait is True:
         subprocess.Popen(

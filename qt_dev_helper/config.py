@@ -229,7 +229,7 @@ class Config(BaseSettings, extra=Extra.forbid):
         default_factory=_str_list_factory,
         description="Additional arguments for the rcc executable.",
     )
-    prefix_paths: List[str] = Field(
+    prefix_paths: Tuple[str,...] = Field(
         default_factory=_str_list_factory,
         description="Paths to look for qt tooling executables and shared objects.",
     )

@@ -47,7 +47,7 @@ def test_find_qt_tool_not_found(monkeypatch: MonkeyPatch):
     with monkeypatch.context() as m:
         from qt_dev_helper import qt_tools
 
-        m.setattr(qt_tools, "extend_qt_tool_path", lambda: "")
+        m.setattr(qt_tools, "extend_qt_tool_path", lambda x: "")
         with pytest.raises(QtToolNotFoundError) as exc_info:
             find_qt_tool.__wrapped__("rcc")
 

@@ -56,6 +56,7 @@ def compile_ui_file(
     generator: Literal["python", "cpp"] = "python",
     form_import: bool = True,
     uic_args: Sequence[str] = (),
+    prefix_paths: Sequence[str] = (),
 ) -> Path:
     """Call 'Qt User Interface Compiler' to create code from a ui file.
 
@@ -85,7 +86,7 @@ def compile_ui_file(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     args = (Path(ui_file).as_posix(), "-o", output_path.as_posix(), *options, *uic_args)
 
-    call_qt_tool("uic", arguments=args)
+    call_qt_tool("uic", prefix_paths=prefix_paths, arguments=args)
     return output_path
 
 
@@ -95,6 +96,7 @@ def compile_resource_file(
     *,
     generator: Literal["python", "cpp"] = "python",
     rcc_args: Sequence[str] = (),
+    prefix_paths: Sequence[str] = (),
 ) -> Path:
     """Call 'Qt Resource Compiler' to create code from a resource file.
 
@@ -120,7 +122,7 @@ def compile_resource_file(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     args = (Path(qrc_file).as_posix(), "-o", output_path.as_posix(), *options, *rcc_args)
 
-    call_qt_tool("rcc", arguments=args)
+    call_qt_tool("rcc", prefix_paths=prefix_paths, arguments=args)
     return output_path
 
 
@@ -132,6 +134,7 @@ def build_uis(
     uic_kwargs: UicKwargs | None = None,
     log_function: Callable[..., None] = rich.print,
     recurse_folder: bool = True,
+    prefix_paths: Sequence[str] = (),
 ) -> list[Path]:
     """Compile ui files by iterating over all ui files in a folder.
 
@@ -175,7 +178,7 @@ def build_uis(
             rel_out_path = rel_out_path.with_suffix(".h")
         out_file = generated_ui_code_folder / rel_out_path
         log_function(f"Creating: {rel_out_path.as_posix()}")
-        built_file = compile_ui_file(ui_file, out_file, **uic_kwargs)
+        built_file = compile_ui_file(ui_file, out_file, prefix_paths=prefix_paths, **uic_kwargs)
         built_files.append(built_file)
     return built_files
 
@@ -188,6 +191,7 @@ def build_resources(
     rcc_kwargs: RccKwargs | None = None,
     log_function: Callable[..., None] = rich.print,
     recurse_folder: bool = True,
+    prefix_paths: Sequence[str] = (),
 ) -> list[Path]:
     """Compile qrc files by iterating over all qrc files in a folder.
 
@@ -229,7 +233,9 @@ def build_resources(
             rel_out_path = rel_out_path.with_suffix(".h")
         out_file = generated_rc_code_folder / rel_out_path
         log_function(f"Creating: {rel_out_path.as_posix()}")
-        built_file = compile_resource_file(resource_file, out_file, **rcc_kwargs)
+        built_file = compile_resource_file(
+            resource_file, out_file, prefix_paths=prefix_paths, **rcc_kwargs
+        )
         built_files.append(built_file)
     return built_files
 
@@ -278,6 +284,7 @@ def build_all_assets(
             uic_kwargs=config.uic_kwargs(),
             log_function=log_function,
             recurse_folder=recurse_folder,
+            prefix_paths=config.prefix_paths,
         )
     except QtDevHelperConfigError:
         log_function("No ui folders fund in config!")
@@ -288,6 +295,7 @@ def build_all_assets(
             rcc_kwargs=config.rcc_kwargs(),
             log_function=log_function,
             recurse_folder=recurse_folder,
+            prefix_paths=config.prefix_paths,
         )
     except QtDevHelperConfigError:
         log_function("No resource folders fund in config!")
