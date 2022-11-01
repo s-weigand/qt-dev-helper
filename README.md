@@ -15,6 +15,18 @@
 
 Toolbox to help develop Qt applications, improving the usability of the existing tooling.
 
+## Installation
+
+```console
+pip install qt-dev-helper
+```
+
+OR
+
+```console
+conda install -c conda-forge qt-dev-helper
+```
+
 ## Features
 
 - Usable as Library and/or CLI tool
@@ -40,12 +52,6 @@ Toolbox to help develop Qt applications, improving the usability of the existing
 - File watch mode
 - `qss` injection into `*.ui` files
 - [`pre-commit`](https://pre-commit.com/) hooks
-
-## Installation
-
-```console
-pip install qt-dev-helper
-```
 
 ## FAQ
 
