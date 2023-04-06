@@ -10,7 +10,7 @@ typer==0.7.0
 qtsass==0.3.2
 
 # extra requirements
-PySide6==6.4.3
+PySide6==6.5.0
 qt5-applications
 qt6-applications
 
