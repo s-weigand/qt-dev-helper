@@ -7,7 +7,7 @@ pydantic==1.10.7
 rich==13.3.3
 tomli==2.0.1
 typer==0.7.0
-qtsass==0.3.2
+qtsass==0.4.0
 
 # extra requirements
 PySide6==6.5.0
