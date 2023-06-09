@@ -21,6 +21,25 @@ app = typer.Typer(
 app.command()(designer)
 app.command()(build)
 
+try:
+    from trogon import Trogon
+    from typer.main import get_group
+
+    def tui(ctx: typer.Context) -> None:
+        """Terminal User Interface to build and run CLI command."""
+        Trogon(get_group(app), click_context=ctx).run()
+
+except ImportError:
+
+    def tui(ctx: typer.Context) -> None:
+        """Not available install 'Trogon' or 'qt-dev-helper[tui]'."""
+        print(
+            "Install 'Trogon' or qt-dev-helper with the TUI extras e.g.:",
+            "`pip install qt-dev-helper[tui]` or install ",
+        )
+
+
+app.command()(tui)
 
 if __name__ == "__main__":
     app()
