@@ -16,7 +16,6 @@ from typing import Union
 import tomli
 from pydantic import Field
 from pydantic import model_validator
-from pydantic import validator
 from pydantic_settings import BaseSettings
 
 
@@ -82,24 +81,22 @@ def _check_symmetric_io_definition(
 
 
 def _check_input_exists(
-    input_var: str, input_var_name: str, base_path: Path, is_file: bool = False
-) -> Optional[str]:
-    """Check that the input path ``base_path / input_var`` exists.
+    config_dict: Dict[str, Any], input_var_name: str, is_file: bool = False
+) -> Dict[str, Any]:
+    """Check that the input path ``config.base_path / input_var`` exists.
 
     Parameters
     ----------
-    input_var: str
-        Value of the input which should be checked for existence.
+    config_dict: Dict[str, Any]
+        Dict of the Config.
     input_var_name: str
-        Variable name, used to format the error message.
-    base_path: Path
-        Base path the input var is relative to.
+        Variable name, used to get value and format the error message.
     is_file: bool
         Whether to check if the path is a valid file or folder. Defaults to False
 
     Returns
     -------
-    Optional[str]
+    Dict[str, Any]
         Value of ``input_var``
 
     Raises
@@ -109,9 +106,10 @@ def _check_input_exists(
     ValueError
         If ``is_file`` is False and the path is not a folder.
     """
+    input_var = config_dict.get(input_var_name)
     if input_var is None:
-        return input_var
-    input_var_path: Path = base_path / input_var
+        return config_dict
+    input_var_path: Path = config_dict.get("base_path") / input_var
     if (
         is_file is True
         and not input_var_path.is_file()
@@ -120,7 +118,7 @@ def _check_input_exists(
     ):
         exception_msg = f"The value of {input_var_name!r} needs to be a valid path or None."
         raise ValueError(exception_msg)
-    return input_var
+    return config_dict
 
 
 def expand_io_paths(
@@ -229,28 +227,20 @@ class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
         description="Additional arguments for the rcc executable.",
     )
 
-    @validator("root_sass_file")
-    def _validate_style_input_path(
-        cls: Type["Config"], root_sass_file: str, values: Dict[str, Any]
-    ) -> Optional[str]:
+    @model_validator(mode="before")
+    def _validate_style_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
         """Validate that ``root_sass_file`` is a valid path if defined."""
-        return _check_input_exists(
-            root_sass_file, "root_sass_file", values["base_path"], is_file=True
-        )
+        return _check_input_exists(data, "root_sass_file", is_file=True)
 
-    @validator("ui_files_folder")
-    def _validate_ui_input_path(
-        cls: Type["Config"], ui_files_folder: str, values: Dict[str, Any]
-    ) -> Optional[str]:
+    @model_validator(mode="before")
+    def _validate_ui_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
         """Validate that ``ui_files_folder`` is a valid path if defined."""
-        return _check_input_exists(ui_files_folder, "ui_files_folder", values["base_path"])
+        return _check_input_exists(data, "ui_files_folder")
 
-    @validator("resource_folder")
-    def _validate_rc_input_path(
-        cls: Type["Config"], resource_folder: str, values: Dict[str, Any]
-    ) -> Optional[str]:
+    @model_validator(mode="before")
+    def _validate_rc_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
         """Validate that ``resource_folder`` is a valid path if defined."""
-        return _check_input_exists(resource_folder, "resource_folder", values["base_path"])
+        return _check_input_exists(data, "resource_folder")
 
     @model_validator(mode="after")  # type:ignore[arg-type]
     def _validate_styles_io(self) -> "Config":
