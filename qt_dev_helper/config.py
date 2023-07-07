@@ -14,11 +14,10 @@ from typing import TypedDict
 from typing import Union
 
 import tomli
-from pydantic import BaseSettings
-from pydantic import Extra
 from pydantic import Field
-from pydantic import root_validator
+from pydantic import model_validator
 from pydantic import validator
+from pydantic_settings import BaseSettings
 
 
 class QtDevHelperConfigError(Exception):
@@ -46,14 +45,14 @@ def _str_list_factory(*args: Any) -> List[str]:
 
 
 def _check_symmetric_io_definition(
-    values: Dict[str, Any], input_var_name: str, output_var_name: str
-) -> Dict[str, Any]:
+    config: "Config", input_var_name: str, output_var_name: str
+) -> "Config":
     """Check that ``input_var_name`` and ``output_var_name`` are both None or both not None.
 
     Parameters
     ----------
-    values: Dict[str, Any]
-        Dict representation of the Config.
+    config: "Config"
+        Instance of the Config.
     input_var_name: str
         Name of the input path variable.
     output_var_name: str
@@ -61,25 +60,25 @@ def _check_symmetric_io_definition(
 
     Returns
     -------
-    Dict[str, Any]
+    "Config"
         Value of ``values``
 
     Raises
     ------
-    ValueError
+    AssertionError
         If only one value of ``input_var_name`` and ``output_var_name`` is None.
     """
-    input_path = values.get(input_var_name)
-    output_path = values.get(output_var_name)
+    input_path = config.model_dump().get(input_var_name)
+    output_path = config.model_dump().get(output_var_name)
     if (output_path is None and input_path is not None) or (
         output_path is not None and input_path is None
     ):
-        raise ValueError(
+        raise AssertionError(
             f"The values of {input_var_name!r} and {output_var_name!r} need either be both "
             "defined or both be undefined.\nGot:\n"
             f"\t{input_var_name}={input_path!r}\n\t{output_var_name}={output_path!r}"
         )
-    return values
+    return config
 
 
 def _check_input_exists(
@@ -181,7 +180,7 @@ class RccKwargs(TypedDict, total=False):
     rcc_args: List[str]
 
 
-class Config(BaseSettings, extra=Extra.forbid):
+class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
     """Project configuration."""
 
     base_path: Path = Field(
@@ -253,24 +252,20 @@ class Config(BaseSettings, extra=Extra.forbid):
         """Validate that ``resource_folder`` is a valid path if defined."""
         return _check_input_exists(resource_folder, "resource_folder", values["base_path"])
 
-    @root_validator()
-    def _validate_styles_io(cls: "Config", values: Dict[str, Any]) -> Dict[str, Any]:
+    @model_validator(mode="after")  # type:ignore[arg-type]
+    def _validate_styles_io(self) -> "Config":
         """``root_sass_file`` and ``root_qss_file`` are both defined or undefined."""
-        return _check_symmetric_io_definition(values, "root_sass_file", "root_qss_file")
+        return _check_symmetric_io_definition(self, "root_sass_file", "root_qss_file")
 
-    @root_validator()
-    def _validate_ui_io(cls: "Config", values: Dict[str, Any]) -> Dict[str, Any]:
+    @model_validator(mode="after")  # type:ignore[arg-type]
+    def _validate_ui_io(self) -> "Config":
         """``ui_files_folder`` and ``generated_ui_code_folder`` are both defined or undefined."""
-        return _check_symmetric_io_definition(
-            values, "ui_files_folder", "generated_ui_code_folder"
-        )
+        return _check_symmetric_io_definition(self, "ui_files_folder", "generated_ui_code_folder")
 
-    @root_validator()
-    def _validate_rc_io(cls: "Config", values: Dict[str, Any]) -> Dict[str, Any]:
+    @model_validator(mode="after")  # type:ignore[arg-type]
+    def _validate_rc_io(self) -> "Config":
         """``resource_folder`` and ``generated_rc_code_folder`` are both defined or undefined."""
-        return _check_symmetric_io_definition(
-            values, "resource_folder", "generated_rc_code_folder"
-        )
+        return _check_symmetric_io_definition(self, "resource_folder", "generated_rc_code_folder")
 
     def root_style_paths(self) -> Tuple[Path, Path]:
         """Resolve paths to root style files.

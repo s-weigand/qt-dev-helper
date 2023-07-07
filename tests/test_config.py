@@ -187,7 +187,7 @@ def test_config_update_errors(dummy_config: Config):
     with pytest.raises(ValidationError) as exec_info:
         dummy_config.update({"invalid_name": "foo"})
 
-    assert "extra fields not permitted" in str(exec_info.value)
+    assert "Extra inputs are not permitted" in str(exec_info.value)
 
 
 def test_load_toml_config(dummy_config: Config):
