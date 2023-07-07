@@ -194,7 +194,8 @@ def test_load_toml_config(dummy_config: Config):
     """Load config from test toml config."""
 
     assert (
-        load_toml_config(dummy_config.base_path / "pyproject.toml").dict() == dummy_config.dict()
+        load_toml_config(dummy_config.base_path / "pyproject.toml").model_dump()
+        == dummy_config.model_dump()
     )
 
 
@@ -244,7 +245,7 @@ def test_load_config(dummy_config: Config, rel_path: str):
 
     result = load_config(dummy_config.base_path / rel_path)
 
-    assert result.dict() == dummy_config.dict()
+    assert result.model_dump() == dummy_config.model_dump()
 
 
 def test_load_config_error(dummy_config: Config):
