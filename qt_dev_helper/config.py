@@ -14,11 +14,9 @@ from typing import TypedDict
 from typing import Union
 
 import tomli
-from pydantic import BaseSettings
-from pydantic import Extra
 from pydantic import Field
-from pydantic import root_validator
-from pydantic import validator
+from pydantic import model_validator
+from pydantic_settings import BaseSettings
 
 
 class QtDevHelperConfigError(Exception):
@@ -46,14 +44,14 @@ def _str_list_factory(*args: Any) -> List[str]:
 
 
 def _check_symmetric_io_definition(
-    values: Dict[str, Any], input_var_name: str, output_var_name: str
-) -> Dict[str, Any]:
+    config: "Config", input_var_name: str, output_var_name: str
+) -> "Config":
     """Check that ``input_var_name`` and ``output_var_name`` are both None or both not None.
 
     Parameters
     ----------
-    values: Dict[str, Any]
-        Dict representation of the Config.
+    config: "Config"
+        Instance of the Config.
     input_var_name: str
         Name of the input path variable.
     output_var_name: str
@@ -61,46 +59,44 @@ def _check_symmetric_io_definition(
 
     Returns
     -------
-    Dict[str, Any]
+    "Config"
         Value of ``values``
 
     Raises
     ------
-    ValueError
+    AssertionError
         If only one value of ``input_var_name`` and ``output_var_name`` is None.
     """
-    input_path = values.get(input_var_name)
-    output_path = values.get(output_var_name)
+    input_path = config.model_dump().get(input_var_name)
+    output_path = config.model_dump().get(output_var_name)
     if (output_path is None and input_path is not None) or (
         output_path is not None and input_path is None
     ):
-        raise ValueError(
+        raise AssertionError(
             f"The values of {input_var_name!r} and {output_var_name!r} need either be both "
             "defined or both be undefined.\nGot:\n"
             f"\t{input_var_name}={input_path!r}\n\t{output_var_name}={output_path!r}"
         )
-    return values
+    return config
 
 
 def _check_input_exists(
-    input_var: str, input_var_name: str, base_path: Path, is_file: bool = False
-) -> Optional[str]:
-    """Check that the input path ``base_path / input_var`` exists.
+    config_dict: Dict[str, Any], input_var_name: str, is_file: bool = False
+) -> Dict[str, Any]:
+    """Check that the input path ``config.base_path / input_var`` exists.
 
     Parameters
     ----------
-    input_var: str
-        Value of the input which should be checked for existence.
+    config_dict: Dict[str, Any]
+        Dict of the Config.
     input_var_name: str
-        Variable name, used to format the error message.
-    base_path: Path
-        Base path the input var is relative to.
+        Variable name, used to get value and format the error message.
     is_file: bool
         Whether to check if the path is a valid file or folder. Defaults to False
 
     Returns
     -------
-    Optional[str]
+    Dict[str, Any]
         Value of ``input_var``
 
     Raises
@@ -110,9 +106,10 @@ def _check_input_exists(
     ValueError
         If ``is_file`` is False and the path is not a folder.
     """
+    input_var = config_dict.get(input_var_name)
     if input_var is None:
-        return input_var
-    input_var_path: Path = base_path / input_var
+        return config_dict
+    input_var_path: Path = config_dict.get("base_path") / input_var
     if (
         is_file is True
         and not input_var_path.is_file()
@@ -121,7 +118,7 @@ def _check_input_exists(
     ):
         exception_msg = f"The value of {input_var_name!r} needs to be a valid path or None."
         raise ValueError(exception_msg)
-    return input_var
+    return config_dict
 
 
 def expand_io_paths(
@@ -181,7 +178,7 @@ class RccKwargs(TypedDict, total=False):
     rcc_args: List[str]
 
 
-class Config(BaseSettings, extra=Extra.forbid):
+class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
     """Project configuration."""
 
     base_path: Path = Field(
@@ -230,47 +227,35 @@ class Config(BaseSettings, extra=Extra.forbid):
         description="Additional arguments for the rcc executable.",
     )
 
-    @validator("root_sass_file")
-    def _validate_style_input_path(
-        cls: Type["Config"], root_sass_file: str, values: Dict[str, Any]
-    ) -> Optional[str]:
+    @model_validator(mode="before")
+    def _validate_style_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
         """Validate that ``root_sass_file`` is a valid path if defined."""
-        return _check_input_exists(
-            root_sass_file, "root_sass_file", values["base_path"], is_file=True
-        )
+        return _check_input_exists(data, "root_sass_file", is_file=True)
 
-    @validator("ui_files_folder")
-    def _validate_ui_input_path(
-        cls: Type["Config"], ui_files_folder: str, values: Dict[str, Any]
-    ) -> Optional[str]:
+    @model_validator(mode="before")
+    def _validate_ui_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
         """Validate that ``ui_files_folder`` is a valid path if defined."""
-        return _check_input_exists(ui_files_folder, "ui_files_folder", values["base_path"])
+        return _check_input_exists(data, "ui_files_folder")
 
-    @validator("resource_folder")
-    def _validate_rc_input_path(
-        cls: Type["Config"], resource_folder: str, values: Dict[str, Any]
-    ) -> Optional[str]:
+    @model_validator(mode="before")
+    def _validate_rc_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
         """Validate that ``resource_folder`` is a valid path if defined."""
-        return _check_input_exists(resource_folder, "resource_folder", values["base_path"])
+        return _check_input_exists(data, "resource_folder")
 
-    @root_validator()
-    def _validate_styles_io(cls: "Config", values: Dict[str, Any]) -> Dict[str, Any]:
+    @model_validator(mode="after")
+    def _validate_styles_io(self) -> "Config":
         """``root_sass_file`` and ``root_qss_file`` are both defined or undefined."""
-        return _check_symmetric_io_definition(values, "root_sass_file", "root_qss_file")
+        return _check_symmetric_io_definition(self, "root_sass_file", "root_qss_file")
 
-    @root_validator()
-    def _validate_ui_io(cls: "Config", values: Dict[str, Any]) -> Dict[str, Any]:
+    @model_validator(mode="after")
+    def _validate_ui_io(self) -> "Config":
         """``ui_files_folder`` and ``generated_ui_code_folder`` are both defined or undefined."""
-        return _check_symmetric_io_definition(
-            values, "ui_files_folder", "generated_ui_code_folder"
-        )
+        return _check_symmetric_io_definition(self, "ui_files_folder", "generated_ui_code_folder")
 
-    @root_validator()
-    def _validate_rc_io(cls: "Config", values: Dict[str, Any]) -> Dict[str, Any]:
+    @model_validator(mode="after")
+    def _validate_rc_io(self) -> "Config":
         """``resource_folder`` and ``generated_rc_code_folder`` are both defined or undefined."""
-        return _check_symmetric_io_definition(
-            values, "resource_folder", "generated_rc_code_folder"
-        )
+        return _check_symmetric_io_definition(self, "resource_folder", "generated_rc_code_folder")
 
     def root_style_paths(self) -> Tuple[Path, Path]:
         """Resolve paths to root style files.
@@ -358,9 +343,9 @@ class Config(BaseSettings, extra=Extra.forbid):
             update_dict = {key: value for key, value in update_dict.items() if value is not None}
 
         # This ensures validation of the updated values
-        updated_config = self.__class__(**{**self.dict(), **update_dict})
+        updated_config = self.__class__(**{**self.model_dump(), **update_dict})
 
-        for key, val in updated_config.dict().items():
+        for key, val in updated_config.model_dump().items():
             setattr(self, key, val)
 
 

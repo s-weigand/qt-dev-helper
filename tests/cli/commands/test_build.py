@@ -29,7 +29,7 @@ def test_build(monkeypatch: MonkeyPatch, dummy_config: Config):
 
         assert result.exit_code == 0, result.stdout
 
-        assert call_kwargs["config"].dict() == dummy_config.dict()
+        assert call_kwargs["config"].model_dump() == dummy_config.model_dump()
 
 
 @pytest.mark.parametrize(
@@ -57,8 +57,8 @@ def test_build_cli_deactivate(
 
         assert result.exit_code == 0, result.stdout
 
-        result_cfg = call_kwargs["config"].dict()
-        expected_cfg = dummy_config.dict()
+        result_cfg = call_kwargs["config"].model_dump()
+        expected_cfg = dummy_config.model_dump()
 
         for none_attr_name in none_attr_names:
             assert result_cfg[none_attr_name] is None

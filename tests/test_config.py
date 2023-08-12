@@ -187,14 +187,15 @@ def test_config_update_errors(dummy_config: Config):
     with pytest.raises(ValidationError) as exec_info:
         dummy_config.update({"invalid_name": "foo"})
 
-    assert "extra fields not permitted" in str(exec_info.value)
+    assert "Extra inputs are not permitted" in str(exec_info.value)
 
 
 def test_load_toml_config(dummy_config: Config):
     """Load config from test toml config."""
 
     assert (
-        load_toml_config(dummy_config.base_path / "pyproject.toml").dict() == dummy_config.dict()
+        load_toml_config(dummy_config.base_path / "pyproject.toml").model_dump()
+        == dummy_config.model_dump()
     )
 
 
@@ -244,7 +245,7 @@ def test_load_config(dummy_config: Config, rel_path: str):
 
     result = load_config(dummy_config.base_path / rel_path)
 
-    assert result.dict() == dummy_config.dict()
+    assert result.model_dump() == dummy_config.model_dump()
 
 
 def test_load_config_error(dummy_config: Config):
