@@ -15,11 +15,17 @@ repos:
       - id: fix-encoding-pragma
         args: [--remove]
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.17.0
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.7.5
     hooks:
-      - id: pyupgrade
-        args: [--py38-plus]
+      - id: docformatter
+        additional_dependencies: [tomli]
+        args: [--in-place, --config, ./pyproject.toml]
+
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: "0.13.0"
+    hooks:
+      - id: pyproject-fmt
 
   - repo: https://github.com/MarcoGorelli/absolufy-imports
     rev: v0.3.1
@@ -38,7 +44,7 @@ repos:
         language_version: python3
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8 # Use the sha or tag you want to point at
+    rev: v3.0.1 # Use the sha or tag you want to point at
     hooks:
       - id: prettier
         additional_dependencies: ["prettier@3.3.2"]
@@ -52,16 +58,10 @@ repos:
   ###################
   #     LINTER      #
   ###################
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.1.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.282
     hooks:
-      - id: flake8
-
-  - repo: https://github.com/asottile/yesqa
-    rev: v1.5.0
-    hooks:
-      - id: yesqa
-        additional_dependencies: [flake8-docstrings]
+      - id: ruff
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.11.1
@@ -73,17 +73,21 @@ repos:
   ###################
   #   LINTER DOCS   #
   ###################
-  - repo: https://github.com/PyCQA/pydocstyle
-    rev: 6.3.0
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.1.0
     hooks:
-      - id: pydocstyle
-        exclude: "^docs|tests|setup.py"
-
-  - repo: https://github.com/terrencepreilly/darglint
-    rev: v1.8.1
-    hooks:
-      - id: darglint
-        exclude: "^docs|tests|setup.py|qt_dev_helper/cli"
+      - id: flake8
+        alias: flake8-docs
+        args:
+          - "--select=DOC"
+          - "--extend-ignore=DOC502"
+          - "--color=always"
+          - "--require-return-section-when-returning-none=False"
+          - "--allow-init-docstring=True"
+          - "--skip-checking-short-docstrings=False"
+        name: "flake8 lint docstrings"
+        exclude: "^(docs/|setup.py$|tests?/)"
+        additional_dependencies: [pydoclint==0.0.10]
 
   - repo: https://github.com/econchick/interrogate
     rev: 1.7.0
@@ -111,3 +115,8 @@ repos:
         types: [file]
         types_or: [python, pyi, markdown, rst, jupyter]
         args: [-L nnumber]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: "v1.6.25"
+    hooks:
+      - id: actionlint
