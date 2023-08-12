@@ -3,11 +3,11 @@
 try:
     import typer
 except ImportError as error:
-    raise ImportError(
+    msg = (
         "The requirements for the cli usage are not installed.\n"
-        "Install qt-dev-helper with the cli extras e.g.:\n"
-        "`pip install qt-dev-helper[cli]`"
-    ) from error
+        "Install qt-dev-helper with the cli extras e.g.:\n`pip install qt-dev-helper[cli]`"
+    )
+    raise ImportError(msg) from error
 
 from qt_dev_helper.cli.commands.build import build
 from qt_dev_helper.cli.commands.designer import designer

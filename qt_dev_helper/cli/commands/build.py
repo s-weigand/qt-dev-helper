@@ -15,7 +15,7 @@ from qt_dev_helper.config import load_config
 from qt_dev_helper.transpiler import build_all_assets
 
 
-def build(
+def build(  # noqa: DOC
     base_path: Optional[Path] = Argument(
         default=None,
         help="Base path used to resolve relative paths, by default the path to a found config.",

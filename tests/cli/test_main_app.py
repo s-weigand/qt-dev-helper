@@ -11,7 +11,7 @@ from qt_dev_helper.cli.main_app import app
 
 
 def test_missing_cli_extra_requires(monkeypatch: MonkeyPatch):
-    """Exception raised if cli extra_requires is missing"""
+    """Exception raised if cli extra_requires is missing."""
     with monkeypatch.context() as m:
         m.delitem(sys.modules, "qt_dev_helper.cli.main_app")
         m.setitem(sys.modules, "typer", None)

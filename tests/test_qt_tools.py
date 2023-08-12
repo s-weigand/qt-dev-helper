@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import os
 import sys
+from typing import TYPE_CHECKING
 
 import pytest
-from _pytest.capture import CaptureFixture
-from _pytest.monkeypatch import MonkeyPatch
 
 from qt_dev_helper.qt_tools import QtToolExecutionError
 from qt_dev_helper.qt_tools import QtToolNotFoundError
@@ -15,10 +14,14 @@ from qt_dev_helper.qt_tools import call_qt_tool
 from qt_dev_helper.qt_tools import extend_qt_tool_path
 from qt_dev_helper.qt_tools import find_qt_tool
 
+if TYPE_CHECKING:
+    from _pytest.capture import CaptureFixture
+    from _pytest.monkeypatch import MonkeyPatch
 
-@pytest.mark.parametrize("package_name", ("pyside6", "qt5_applications", "qt6_applications"))
+
+@pytest.mark.parametrize("package_name", ["pyside6", "qt5_applications", "qt6_applications"])
 def test_extend_qt_tool_path(package_name: str):
-    """All supported tools are on the extended path"""
+    """All supported tools are on the extended path."""
     assert package_name in extend_qt_tool_path().lower()
 
 
@@ -28,7 +31,7 @@ def test_extend_qt_tool_path_missing_module(monkeypatch: MonkeyPatch):
         from qt_dev_helper import qt_tools
 
         def mock_package_path(*args):
-            raise ModuleNotFoundError()
+            raise ModuleNotFoundError
 
         m.setattr(qt_tools, "package_path", mock_package_path)
 
@@ -82,7 +85,7 @@ def test_call_qt_tool_no_wait(capfd: CaptureFixture):
 )
 def test_call_qt_tool_exception():
     """Raise Except if arguments is of wrong type or bad options are passed."""
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(ValueError) as exc_info:  # noqa: PT011
         call_qt_tool("uic", arguments=("--help"))
 
     assert str(exc_info.value) == (

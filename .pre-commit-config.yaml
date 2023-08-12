@@ -85,6 +85,7 @@ repos:
           - "--require-return-section-when-returning-none=False"
           - "--allow-init-docstring=True"
           - "--skip-checking-short-docstrings=False"
+          - "--count"
         name: "flake8 lint docstrings"
         exclude: "^(docs/|setup.py$|tests?/)"
         additional_dependencies: [pydoclint==0.0.10]

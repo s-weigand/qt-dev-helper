@@ -20,7 +20,7 @@ class QtToolNotFoundError(Exception):
     find_qt_tool
     """
 
-    def __init__(self, tool_name: str) -> None:
+    def __init__(self, tool_name: str) -> None:  # noqa: DOC
         super().__init__(
             f"Can not find Qt tool {tool_name=} please install a Qt distributions. "
             "E.g. 'pip install PySide6'."
@@ -35,7 +35,9 @@ class QtToolExecutionError(Exception):
     call_qt_tool
     """
 
-    def __init__(self, returncode: int, cmd: str, stdout: bytes, stderr: bytes) -> None:
+    def __init__(  # noqa: DOC
+        self, returncode: int, cmd: str, stdout: bytes, stderr: bytes
+    ) -> None:
         output = (stdout + b"\n\n" + stderr).decode()
         super().__init__(
             f"Command {cmd!r} returned non-zero exit status {returncode}.\n"
@@ -53,7 +55,6 @@ def extend_qt_tool_path() -> str:
         Path extended with library executable paths.
     """
     additional_paths: list[str] = []
-    # package_name: rel_path_to_include
     tool_packages = {
         "PySide6": ["", "Qt/libexec"],
         "shiboken6": [""],
@@ -61,9 +62,8 @@ def extend_qt_tool_path() -> str:
         "qt5_applications": ["Qt/bin", "Qt/lib"],
     }
     for package, rel_paths in tool_packages.items():
-        with contextlib.suppress(ModuleNotFoundError):
-            with package_path(package, "__init__.py") as p:
-                additional_paths += [str(p.parent / rel_path) for rel_path in rel_paths]
+        with contextlib.suppress(ModuleNotFoundError), package_path(package, "__init__.py") as p:
+            additional_paths += [str(p.parent / rel_path) for rel_path in rel_paths]
     return os.pathsep.join((*additional_paths, os.environ.get("PATH", "")))
 
 
@@ -73,7 +73,7 @@ def find_qt_tool(tool_name: str) -> str:
 
     Parameters
     ----------
-    tool_name: str
+    tool_name : str
         Name of the Qt tool to look up.
 
     Returns
@@ -98,11 +98,11 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = (), no_wait: bool
 
     Parameters
     ----------
-    tool_name: str
+    tool_name : str
         Name of the Qt tool to use (e.g. ``rcc``, ``uic`` or ``designer``)
-    arguments: Sequence[str]
+    arguments : Sequence[str]
         Additional arguments for options for the tool. Defaults to ()
-    no_wait: bool
+    no_wait : bool
         Whether or not to wait for the process to finish
         (used for CLI not to wait for designer application to close). Defaults to False
 
@@ -114,7 +114,8 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = (), no_wait: bool
         If the tool returns a non-zero exit code.
     """
     if not isinstance(arguments, Sequence) or isinstance(arguments, str):
-        raise ValueError(f"arguments needs to be of type Sequence[str],\n Got:\n\t{arguments=}")
+        msg = f"arguments needs to be of type Sequence[str],\n Got:\n\t{arguments=}"
+        raise ValueError(msg)
     tool_exe = find_qt_tool(tool_name)
 
     cmd = " ".join((tool_exe, *arguments))
@@ -134,4 +135,4 @@ def call_qt_tool(tool_name: str, *, arguments: Sequence[str] = (), no_wait: bool
                 returncode=out.returncode, cmd=cmd, stdout=out.stdout, stderr=out.stderr
             )
 
-        print(out.stdout.decode())
+        print(out.stdout.decode())  # noqa: T201

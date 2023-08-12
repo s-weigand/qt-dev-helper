@@ -14,13 +14,13 @@ def format_rel_output_path(
 
     Parameters
     ----------
-    root_folder: Path
+    root_folder : Path
         Root folder of the file resides in.
-    file_path: Path
+    file_path : Path
         Path to the file to be formatted.
-    format_string: str
+    format_string : str
         String with format instruction 'file_stem' (e.g. 'Ui_{file_stem}.py').
-    flatten_path: bool
+    flatten_path : bool
         Whether or not to persist the original folder structure. Defaults to True
 
     Returns
@@ -28,7 +28,7 @@ def format_rel_output_path(
     Path
         Relative path in respect to ``root_folder`` for the formatted file.
     """
-    rel_file_parent_path = Path("")
+    rel_file_parent_path = Path()
     file_name = format_string.format(file_stem=file_path.stem)
     if flatten_path is False:
         rel_file_parent_path = file_path.relative_to(root_folder).parent
@@ -43,11 +43,11 @@ def find_matching_files(
 
     Parameters
     ----------
-    files: Sequence[Path]
+    files : Sequence[Path]
         List of paths (files or folders) to check for matching files.
-    file_pattern: str
+    file_pattern : str
         Pattern to match files, this a Unix shell-style pattern and nto an regex.
-    recurse_folder: bool
+    recurse_folder : bool
         Whether or not to recurse directories searching for files. Defaults to True
 
     Returns
