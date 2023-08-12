@@ -1,0 +1,24 @@
+{
+  "template": "https://github.com/s-weigand/cookiecutter-pypackage",
+  "commit": "6746996e34830a8d6bc973868a02c3ebd4944c98",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "full_name": "Sebastian Weigand",
+      "email": "s.weigand.phy@gmail.com",
+      "github_username": "s-weigand",
+      "project_name": "Qt Dev Helper",
+      "project_slug": "qt_dev_helper",
+      "project_slug_url": "qt-dev-helper",
+      "project_short_description": "Toolbox to help develop Qt applications, improving the usability of the existing tooling.",
+      "version": "0.0.4",
+      "command_line_interface": "typer",
+      "open_source_license": "Apache Software License 2.0",
+      "git_host_url": "https://github.com",
+      "install_pre_commit": "no",
+      "_copy_without_render": ["docs/_templates/autosummary"],
+      "_template": "https://github.com/s-weigand/cookiecutter-pypackage"
+    }
+  },
+  "directory": null
+}
