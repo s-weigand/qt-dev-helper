@@ -11,7 +11,7 @@ from qt_dev_helper.qt_tools import call_qt_tool
 from qt_dev_helper.utils import find_matching_files
 
 
-def designer(
+def designer(  # noqa: DOC
     files: List[Path] = Argument(
         default=None,
         exists=True,

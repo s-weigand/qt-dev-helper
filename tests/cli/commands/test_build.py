@@ -1,17 +1,22 @@
-"""Tests for qt_dev_helper.cli.commands.designer"""
+"""Tests for qt_dev_helper.cli.commands.designer."""
 
 from __future__ import annotations
 
 import os
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 from typer.testing import CliRunner
 
 import qt_dev_helper.cli.commands.build as build_cli_module
 from qt_dev_helper.cli.main_app import app
-from qt_dev_helper.config import Config
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from _pytest.monkeypatch import MonkeyPatch
+
+    from qt_dev_helper.config import Config
 
 
 def test_build(monkeypatch: MonkeyPatch, dummy_config: Config):
@@ -33,12 +38,12 @@ def test_build(monkeypatch: MonkeyPatch, dummy_config: Config):
 
 
 @pytest.mark.parametrize(
-    "flag, none_attr_names",
-    (
+    ("flag", "none_attr_names"),
+    [
         ("--no-ui", ("ui_files_folder", "generated_ui_code_folder")),
         ("--no-rc", ("resource_folder", "generated_rc_code_folder")),
         ("--no-qss", ("root_sass_file", "root_qss_file")),
-    ),
+    ],
 )
 def test_build_cli_deactivate(
     monkeypatch: MonkeyPatch, dummy_config: Config, flag: str, none_attr_names: tuple[str, str]
@@ -69,7 +74,7 @@ def test_build_cli_deactivate(
         assert result_cfg == expected_cfg
 
 
-@pytest.mark.parametrize("pass_base_path", (True, False))
+@pytest.mark.parametrize("pass_base_path", [True, False])
 def test_build_cli_no_config(monkeypatch: MonkeyPatch, tmp_path: Path, pass_base_path: bool):
     """Deactivate build parts."""
     runner = CliRunner()

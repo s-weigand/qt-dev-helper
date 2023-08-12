@@ -32,7 +32,7 @@ def _str_list_factory(*args: Any) -> List[str]:
 
     Parameters
     ----------
-    args: Any
+    *args : Any
         Arbitrary arguments.
 
     Returns
@@ -50,11 +50,11 @@ def _check_symmetric_io_definition(
 
     Parameters
     ----------
-    config: "Config"
+    config : "Config"
         Instance of the Config.
-    input_var_name: str
+    input_var_name : str
         Name of the input path variable.
-    output_var_name: str
+    output_var_name : str
         Name of the output path variable.
 
     Returns
@@ -72,11 +72,12 @@ def _check_symmetric_io_definition(
     if (output_path is None and input_path is not None) or (
         output_path is not None and input_path is None
     ):
-        raise AssertionError(
-            f"The values of {input_var_name!r} and {output_var_name!r} need either be both "
-            "defined or both be undefined.\nGot:\n"
-            f"\t{input_var_name}={input_path!r}\n\t{output_var_name}={output_path!r}"
+        msg = (
+            f"The values of {input_var_name!r} and {output_var_name!r} "
+            "need either be both defined or both be undefined.\n"
+            "Got:\n\t{input_var_name}={input_path!r}\n\t{output_var_name}={output_path!r}"
         )
+        raise AssertionError(msg)
     return config
 
 
@@ -87,11 +88,11 @@ def _check_input_exists(
 
     Parameters
     ----------
-    config_dict: Dict[str, Any]
+    config_dict : Dict[str, Any]
         Dict of the Config.
-    input_var_name: str
+    input_var_name : str
         Variable name, used to get value and format the error message.
-    is_file: bool
+    is_file : bool
         Whether to check if the path is a valid file or folder. Defaults to False
 
     Returns
@@ -128,11 +129,11 @@ def expand_io_paths(
 
     Parameters
     ----------
-    config: Config
+    config : Config
         Config instance, needed to determine the base path.
-    input_var_name: str
+    input_var_name : str
         Name of the variable holding the input path string.
-    output_var_name: str
+    output_var_name : str
         Name of the variable holding the input path string.
 
     Returns
@@ -147,12 +148,13 @@ def expand_io_paths(
     """
     input_var: str = getattr(config, input_var_name)
     output_var: str = getattr(config, output_var_name)
-    base_path: Path = getattr(config, "base_path")
+    base_path: Path = config.base_path
     if input_var is None or output_var is None:
-        raise QtDevHelperConfigError(
+        msg = (
             f"Both {input_var_name!r} and {output_var_name!r} need to be defined.\n"
-            f"Got:\n\t{input_var_name}={output_var!r}\n\n{input_var_name}={output_var!r}"
+            "Got:\n\t{input_var_name}={output_var!r}\n\n{input_var_name}={output_var!r}"
         )
+        raise QtDevHelperConfigError(msg)
     return base_path / input_var, base_path / output_var
 
 
@@ -228,32 +230,38 @@ class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
     )
 
     @model_validator(mode="before")
-    def _validate_style_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_style_input_path(  # noqa: DOC
+        cls: Type["Config"], data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Validate that ``root_sass_file`` is a valid path if defined."""
         return _check_input_exists(data, "root_sass_file", is_file=True)
 
     @model_validator(mode="before")
-    def _validate_ui_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_ui_input_path(  # noqa: DOC
+        cls: Type["Config"], data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Validate that ``ui_files_folder`` is a valid path if defined."""
         return _check_input_exists(data, "ui_files_folder")
 
     @model_validator(mode="before")
-    def _validate_rc_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_rc_input_path(  # noqa: DOC
+        cls: Type["Config"], data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Validate that ``resource_folder`` is a valid path if defined."""
         return _check_input_exists(data, "resource_folder")
 
     @model_validator(mode="after")
-    def _validate_styles_io(self) -> "Config":
+    def _validate_styles_io(self) -> "Config":  # noqa: DOC
         """``root_sass_file`` and ``root_qss_file`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "root_sass_file", "root_qss_file")
 
     @model_validator(mode="after")
-    def _validate_ui_io(self) -> "Config":
+    def _validate_ui_io(self) -> "Config":  # noqa: DOC
         """``ui_files_folder`` and ``generated_ui_code_folder`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "ui_files_folder", "generated_ui_code_folder")
 
     @model_validator(mode="after")
-    def _validate_rc_io(self) -> "Config":
+    def _validate_rc_io(self) -> "Config":  # noqa: DOC
         """``resource_folder`` and ``generated_rc_code_folder`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "resource_folder", "generated_rc_code_folder")
 
@@ -334,9 +342,9 @@ class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
 
         Parameters
         ----------
-        update_dict: Dict[str, Any]
+        update_dict : Dict[str, Any]
             Dict containing updated values.
-        filter_none: bool
+        filter_none : bool
             Whether or not to filter None values before updating. Defaults to True
         """
         if filter_none is True:
@@ -354,7 +362,7 @@ def load_toml_config(path: Path) -> Config:
 
     Parameters
     ----------
-    path: Path
+    path : Path
         Path to the toml config file.
 
     Returns
@@ -371,7 +379,8 @@ def load_toml_config(path: Path) -> Config:
     qt_dev_helper_config = toml_config.get("tool", {}).get("qt-dev-helper", {})
     if len(qt_dev_helper_config) > 0:
         return Config(**{**qt_dev_helper_config, "base_path": path.parent})
-    raise ConfigNotFoundError(f"Could not find 'qt-dev-helper' config in {path.as_posix()}")
+    msg = f"Could not find 'qt-dev-helper' config in {path.as_posix()}"
+    raise ConfigNotFoundError(msg)
 
 
 def find_config(
@@ -381,10 +390,10 @@ def find_config(
 
     Parameters
     ----------
-    start_path: Optional[Union[Path,str]]
+    start_path : Optional[Union[Path, str]]
         Path to start looking for the config file.
         Defaults to None which means the current dir will be used
-    config_file_name: str
+    config_file_name : str
         Name of the config file. Defaults to "pyproject.toml"
 
     Returns
@@ -408,7 +417,8 @@ def find_config(
         file_path = path / config_file_name
         if file_path in set(path.iterdir()):
             return file_path
-    raise ConfigNotFoundError(f"Could not find config file {config_file_name!r}.")
+    msg = f"Could not find config file {config_file_name!r}."
+    raise ConfigNotFoundError(msg)
 
 
 def load_config(start_path: Optional[Union[Path, str]] = None) -> Config:
@@ -416,7 +426,7 @@ def load_config(start_path: Optional[Union[Path, str]] = None) -> Config:
 
     Parameters
     ----------
-    start_path: Optional[Union[Path,str]]
+    start_path : Optional[Union[Path, str]]
         Path to start looking for the config file.
         Defaults to None which means the current dir will be used
 
@@ -437,4 +447,5 @@ def load_config(start_path: Optional[Union[Path, str]] = None) -> Config:
         except ConfigNotFoundError:
             continue
 
-    raise ConfigNotFoundError("No config file containing 'qt-dev-helper' config could be found.")
+    msg = "No config file containing 'qt-dev-helper' config could be found."
+    raise ConfigNotFoundError(msg)
