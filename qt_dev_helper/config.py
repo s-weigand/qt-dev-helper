@@ -242,17 +242,17 @@ class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
         """Validate that ``resource_folder`` is a valid path if defined."""
         return _check_input_exists(data, "resource_folder")
 
-    @model_validator(mode="after")  # type:ignore[arg-type]
+    @model_validator(mode="after")
     def _validate_styles_io(self) -> "Config":
         """``root_sass_file`` and ``root_qss_file`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "root_sass_file", "root_qss_file")
 
-    @model_validator(mode="after")  # type:ignore[arg-type]
+    @model_validator(mode="after")
     def _validate_ui_io(self) -> "Config":
         """``ui_files_folder`` and ``generated_ui_code_folder`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "ui_files_folder", "generated_ui_code_folder")
 
-    @model_validator(mode="after")  # type:ignore[arg-type]
+    @model_validator(mode="after")
     def _validate_rc_io(self) -> "Config":
         """``resource_folder`` and ``generated_rc_code_folder`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "resource_folder", "generated_rc_code_folder")
