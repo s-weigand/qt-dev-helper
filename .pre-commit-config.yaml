@@ -77,7 +77,7 @@ repos:
     rev: 6.1.0
     hooks:
       - id: flake8
-        alias: flake8-docs
+        alias: pydoclint
         args:
           - "--select=DOC"
           - "--extend-ignore=DOC502"
@@ -86,9 +86,9 @@ repos:
           - "--allow-init-docstring=True"
           - "--skip-checking-short-docstrings=False"
           - "--count"
-        name: "flake8 lint docstrings"
+        name: "pydoclint"
         exclude: "^(docs/|setup.py$|tests?/)"
-        additional_dependencies: [pydoclint==0.0.10]
+        additional_dependencies: [pydoclint==0.1.5]
 
   - repo: https://github.com/econchick/interrogate
     rev: 1.7.0
