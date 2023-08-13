@@ -52,7 +52,7 @@ def find_matching_files(
 
     Returns
     -------
-    tuple[str,...]
+    tuple[str, ...]
         Tuple of posix conform string paths to files matching ``file_pattern``.
     """
     file_paths = set()
