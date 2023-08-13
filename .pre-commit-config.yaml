@@ -26,6 +26,7 @@ repos:
     rev: "0.13.0"
     hooks:
       - id: pyproject-fmt
+        exclude: "^tests/data/pyproject\\.toml$"
 
   - repo: https://github.com/MarcoGorelli/absolufy-imports
     rev: v0.3.1
