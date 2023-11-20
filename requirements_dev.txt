@@ -5,7 +5,7 @@ wheel>=0.33.6
 # pinned so the bot can create PRs to test with new versions
 pydantic==2.3.0
 pydantic-settings==2.0.3
-rich==13.5.2
+rich==13.7.0
 tomli==2.0.1
 typer==0.9.0
 qtsass==0.4.0
