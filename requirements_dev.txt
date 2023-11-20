@@ -3,7 +3,7 @@ pip>=19.2.3
 wheel>=0.33.6
 # runtime requirements
 # pinned so the bot can create PRs to test with new versions
-pydantic==2.3.0
+pydantic==2.5.1
 pydantic-settings==2.0.3
 rich==13.5.2
 tomli==2.0.1
