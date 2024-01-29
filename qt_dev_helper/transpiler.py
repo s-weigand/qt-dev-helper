@@ -1,4 +1,5 @@
 """Module containing functionality to transpile resources *.scss, *.ui and *.qrc."""
+
 from __future__ import annotations
 
 from pathlib import Path

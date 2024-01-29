@@ -1,4 +1,5 @@
 """Test calling qt-dev-helper as module."""
+
 import re
 import subprocess
 import sys
