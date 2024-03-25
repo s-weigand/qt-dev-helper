@@ -1,4 +1,5 @@
 """Unit test package for qt_dev_helper."""
+
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).parent.parent
