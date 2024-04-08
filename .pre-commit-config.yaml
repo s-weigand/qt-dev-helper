@@ -5,7 +5,7 @@ repos:
   #    FORMATTER    #
   ###################
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-ast
       - id: check-builtin-literals
@@ -85,7 +85,7 @@ repos:
         exclude: "^docs|tests|setup.py|qt_dev_helper/cli"
 
   - repo: https://github.com/econchick/interrogate
-    rev: 1.5.0
+    rev: 1.7.0
     hooks:
       - id: interrogate
         args: [-v, --config=pyproject.toml, "qt_dev_helper"]
