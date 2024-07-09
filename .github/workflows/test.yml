@@ -66,9 +66,13 @@ jobs:
     needs: [pre-commit, docs]
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macos-12]
         python-version: ["3.8", "3.9", "3.10", "3.11"]
-
+        # macOS-latest runs on M1 hardware, so we are using macos-12,
+        # the last version supporting Intel hardware, to ensure compatibility.
+        # exclude:
+        #   - os: macOS-latest
+        #     python-version: ["3.8", "3.9", "3.10", "3.11"]
     steps:
       - name: Check out repo
         uses: actions/checkout@v3
