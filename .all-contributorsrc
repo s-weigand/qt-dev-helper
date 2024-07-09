@@ -1,5 +1,7 @@
 {
-  "files": ["README.md"],
+  "files": [
+    "README.md"
+  ],
   "imageSize": 100,
   "commit": false,
   "contributors": [
@@ -23,7 +25,11 @@
       "name": "Joris Snellenburg",
       "avatar_url": "https://avatars.githubusercontent.com/u/3616369?v=4",
       "profile": "https://github.com/jsnel",
-      "contributions": ["review"]
+      "contributions": [
+        "review",
+        "maintenance",
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -31,5 +37,7 @@
   "projectOwner": "s-weigand",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitType": "docs",
+  "commitConvention": "angular"
 }
