@@ -1,4 +1,5 @@
 """Module containing the CLI build command implementations."""
+
 import os
 from pathlib import Path
 from typing import Optional
