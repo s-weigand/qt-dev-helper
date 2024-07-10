@@ -41,6 +41,7 @@ repos:
     rev: v4.0.0-alpha.8 # Use the sha or tag you want to point at
     hooks:
       - id: prettier
+        additional_dependencies: ["prettier@3.3.2"]
 
   - repo: https://github.com/asottile/setup-cfg-fmt
     rev: v2.5.0
