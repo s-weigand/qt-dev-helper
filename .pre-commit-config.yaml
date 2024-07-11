@@ -5,7 +5,7 @@ repos:
   #    FORMATTER    #
   ###################
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.6.0
     hooks:
       - id: check-ast
       - id: check-builtin-literals
@@ -16,7 +16,7 @@ repos:
         args: [--remove]
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.10.1
+    rev: v3.16.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -27,23 +27,24 @@ repos:
       - id: absolufy-imports
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
 
   - repo: https://github.com/python/black
-    rev: 23.7.0
+    rev: 24.4.2
     hooks:
       - id: black
         language_version: python3
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.2 # Use the sha or tag you want to point at
+    rev: v4.0.0-alpha.8 # Use the sha or tag you want to point at
     hooks:
       - id: prettier
+        additional_dependencies: ["prettier@3.3.2"]
 
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.4.0
+    rev: v2.5.0
     hooks:
       - id: setup-cfg-fmt
         args: [--include-version-classifiers]
@@ -52,7 +53,7 @@ repos:
   #     LINTER      #
   ###################
   - repo: https://github.com/pycqa/flake8
-    rev: 6.1.0
+    rev: 7.1.0
     hooks:
       - id: flake8
 
@@ -63,7 +64,7 @@ repos:
         additional_dependencies: [flake8-docstrings]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.1
+    rev: v1.10.1
     hooks:
       - id: mypy
         exclude: "docs"
@@ -85,14 +86,14 @@ repos:
         exclude: "^docs|tests|setup.py|qt_dev_helper/cli"
 
   - repo: https://github.com/econchick/interrogate
-    rev: 1.5.0
+    rev: 1.7.0
     hooks:
       - id: interrogate
         args: [-v, --config=pyproject.toml, "qt_dev_helper"]
         pass_filenames: false
 
   - repo: https://github.com/myint/rstcheck
-    rev: "v6.1.2"
+    rev: "v6.2.4"
     hooks:
       - id: rstcheck
         additional_dependencies: [sphinx]
@@ -104,7 +105,7 @@ repos:
       - id: rst-backticks
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.5
+    rev: v2.3.0
     hooks:
       - id: codespell
         types: [file]
