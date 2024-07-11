@@ -90,7 +90,7 @@ jobs:
           pytest --cov=./ --cov-report term --cov-report xml --cov-config=pyproject.toml tests
       - name: Codecov Upload
         continue-on-error: true
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           file: ./coverage.xml
           name: ${{ matrix.os }}-py${{ matrix.python-version }}
