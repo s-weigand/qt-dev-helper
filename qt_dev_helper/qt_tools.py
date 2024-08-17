@@ -8,7 +8,8 @@ import shutil
 import subprocess
 from collections.abc import Sequence
 from functools import lru_cache
-from importlib.resources import path as package_path
+from importlib.resources import as_file
+from importlib.resources import files
 from pathlib import Path
 
 
@@ -62,8 +63,8 @@ def extend_qt_tool_path() -> str:
         "qt5_applications": ["Qt/bin", "Qt/lib"],
     }
     for package, rel_paths in tool_packages.items():
-        with contextlib.suppress(ModuleNotFoundError), package_path(package, "__init__.py") as p:
-            additional_paths += [str(p.parent / rel_path) for rel_path in rel_paths]
+        with contextlib.suppress(ModuleNotFoundError), as_file(files(package)) as p:
+            additional_paths += [str(p / rel_path) for rel_path in rel_paths]
     return os.pathsep.join((*additional_paths, os.environ.get("PATH", "")))
 
 

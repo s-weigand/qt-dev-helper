@@ -30,10 +30,10 @@ def test_extend_qt_tool_path_missing_module(monkeypatch: MonkeyPatch):
     with monkeypatch.context() as m:
         from qt_dev_helper import qt_tools
 
-        def mock_package_path(*args):
+        def resource_files(*args):
             raise ModuleNotFoundError
 
-        m.setattr(qt_tools, "package_path", mock_package_path)
+        m.setattr(qt_tools, "files", resource_files)
 
         assert extend_qt_tool_path.__wrapped__() == os.environ.get("PATH", "")
 
