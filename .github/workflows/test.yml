@@ -94,6 +94,7 @@ jobs:
         with:
           file: ./coverage.xml
           name: ${{ matrix.os }}-py${{ matrix.python-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy:
     runs-on: ubuntu-latest
