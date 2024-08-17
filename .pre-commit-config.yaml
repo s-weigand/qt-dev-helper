@@ -16,7 +16,7 @@ repos:
         args: [--remove]
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.16.0
+    rev: v3.17.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -32,7 +32,7 @@ repos:
       - id: isort
 
   - repo: https://github.com/python/black
-    rev: 24.4.2
+    rev: 24.8.0
     hooks:
       - id: black
         language_version: python3
@@ -53,7 +53,7 @@ repos:
   #     LINTER      #
   ###################
   - repo: https://github.com/pycqa/flake8
-    rev: 7.1.0
+    rev: 7.1.1
     hooks:
       - id: flake8
 
@@ -64,11 +64,11 @@ repos:
         additional_dependencies: [flake8-docstrings]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.10.1
+    rev: v1.11.1
     hooks:
       - id: mypy
         exclude: "docs"
-        additional_dependencies: ["types-all", "pydantic>2"]
+        additional_dependencies: ["pydantic>2"]
 
   ###################
   #   LINTER DOCS   #
