@@ -1,16 +1,17 @@
 """Tests for the `qt_dev_helper``` cli main command."""
 
+from __future__ import annotations
+
 import re
 import sys
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 from typer.testing import CliRunner
 
 from qt_dev_helper.cli.main_app import app
 
 
-def test_missing_cli_extra_requires(monkeypatch: MonkeyPatch):
+def test_missing_cli_extra_requires(monkeypatch: pytest.MonkeyPatch):
     """Exception raised if cli extra_requires is missing."""
     with monkeypatch.context() as m:
         m.delitem(sys.modules, "qt_dev_helper.cli.main_app")

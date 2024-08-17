@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Callable
 from typing import Literal
-from typing import Sequence
 from typing import cast
 
 import qtsass
@@ -19,6 +19,9 @@ from qt_dev_helper.config import load_config
 from qt_dev_helper.qt_tools import call_qt_tool
 from qt_dev_helper.utils import find_matching_files
 from qt_dev_helper.utils import format_rel_output_path
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def transpile_sass(sass_file: str | Path, qss_file: str | Path) -> Path:
@@ -238,6 +241,7 @@ def build_resources(
 def build_all_assets(
     config: Config | str | Path,
     log_function: Callable[..., None] = rich.print,
+    *,
     recurse_folder: bool = True,
 ) -> list[Path]:
     """Build all assets based on the provided configuration.

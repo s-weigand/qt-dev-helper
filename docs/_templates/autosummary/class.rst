@@ -5,12 +5,12 @@
 .. autoclass:: {{ objname }}
 
     {% block attributes_summary %}
-    {% if all_attributes %}
+    {% if attributes %}
 
     .. rubric:: Attributes Summary
 
     .. autosummary::
-    {% for item in all_attributes %}
+    {% for item in attributes %}
         ~{{ item }}
     {%- endfor %}
 
@@ -18,7 +18,7 @@
     {% endblock %}
 
     {% block methods_summary %}
-    {% if all_methods %}
+    {% if methods %}
 
      {% if '__init__' in methods %}
         {% set caught_result = methods.remove('__init__') %}
@@ -30,7 +30,7 @@
         :toctree: {{ objname }}/methods
         :nosignatures:
 
-    {% for item in all_methods %}
+    {% for item in methods %}
         ~{{ name }}.{{ item }}
     {%- endfor %}
 
@@ -42,7 +42,7 @@
 
     .. rubric:: Methods Documentation
 
-    {% for item in all_methods %}
+    {% for item in methods %}
     .. automethod:: {{ name }}.{{ item }}
     {%- endfor %}
 

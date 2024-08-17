@@ -1,9 +1,9 @@
 """Fixture definition accessible from the whole test suite."""
+
 from __future__ import annotations
 
 import shutil
 from typing import TYPE_CHECKING
-from typing import Sequence
 from typing import TypedDict
 
 import pytest
@@ -12,10 +12,11 @@ from qt_dev_helper.config import Config
 from tests import TEST_DATA
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
 
 
-@pytest.fixture()
+@pytest.fixture
 def dummy_config(tmp_path: Path):
     """Copy test data to temp folder and create config."""
     shutil.copytree(
@@ -41,7 +42,7 @@ def dummy_config(tmp_path: Path):
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def nested_ui_folder(tmp_path: Path):
     """Nested folder structure with *.ui files."""
     nested_folder = tmp_path / "foo/bar"
@@ -64,7 +65,7 @@ class CallQtToolKwargs(TypedDict, total=False):
     no_wait: bool
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_call_qt_tool():
     """Mock fixture for calling a qt tool."""
     call_kwargs: CallQtToolKwargs = {}

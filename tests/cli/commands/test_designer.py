@@ -5,7 +5,6 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 from typing import Callable
-from typing import Sequence
 
 import pytest
 from typer.testing import CliRunner
@@ -14,6 +13,7 @@ import qt_dev_helper.cli.commands.designer as designer_cli_module
 from qt_dev_helper.cli.main_app import app
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
 
     from _pytest.monkeypatch import MonkeyPatch

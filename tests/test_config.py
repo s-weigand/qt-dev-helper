@@ -1,4 +1,5 @@
 """Tests for ``qt_dev_helper.config``."""
+
 from __future__ import annotations
 
 import os
@@ -219,7 +220,7 @@ def test_load_toml_config_no_tool_config(tmp_path: Path):
     ("start_path", "config_file_name", "expected"),
     [
         (REPO_ROOT, "pyproject.toml", REPO_ROOT / "pyproject.toml"),
-        (REPO_ROOT, "setup.cfg", REPO_ROOT / "setup.cfg"),
+        (TEST_DATA, "setup.cfg", TEST_DATA / "setup.cfg"),
         (TEST_DATA, "pyproject.toml", TEST_DATA / "pyproject.toml"),
         (TEST_DATA.parent, "pyproject.toml", REPO_ROOT / "pyproject.toml"),
         (None, "pyproject.toml", REPO_ROOT / "pyproject.toml"),

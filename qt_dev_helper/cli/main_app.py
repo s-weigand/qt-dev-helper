@@ -1,5 +1,7 @@
 """Main CLI application definition."""
 
+from __future__ import annotations
+
 try:
     import typer
 except ImportError as error:

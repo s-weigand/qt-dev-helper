@@ -9,9 +9,7 @@
 [![Documentation Status](https://readthedocs.org/projects/qt-dev-helper/badge/?version=latest)](https://qt-dev-helper.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/s-weigand/qt-dev-helper/branch/main/graph/badge.svg)](https://codecov.io/gh/s-weigand/qt-dev-helper)
 [![Documentation Coverage](https://raw.githubusercontent.com/s-weigand/qt-dev-helper/main/docs/_static/interrogate_badge.svg)](https://github.com/s-weigand/qt-dev-helper)
-[![Code style Python: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 [![All Contributors](https://img.shields.io/github/all-contributors/s-weigand/qt-dev-helper)](#contributors)
 
