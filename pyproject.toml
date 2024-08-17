@@ -105,13 +105,16 @@ env = [
   "_TYPER_STANDARD_TRACEBACK=1",
 ]
 
+[tool.coverage.paths]
+source = [
+  "qt_dev_helper",
+  "*/site-packages/qt_dev_helper",
+]
 [tool.coverage.run]
 branch = true
 omit = [
-  'qt_dev_helper/__init__.py',
   'qt_dev_helper/cli/_cli_docs.py',
-  'tests/*',
-  # comment the above line if you want to see if all tests did run
+  '*/site-packages/qt_dev_helper/cli/_cli_docs.py',
 ]
 
 [tool.coverage.report]
