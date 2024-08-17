@@ -9,4 +9,4 @@ typer==0.12.5
 qtsass==0.4.0
 
 # extra requirements
-PySide6==6.5.2
+PySide6==6.6.0
