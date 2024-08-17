@@ -56,6 +56,7 @@ optional-dependencies.test = [
   "pytest-env>=0.6.2",
   "qt5-applications",
   "qt6-applications",
+  "setuptools",            # needed because qt-applications use pkg-resources
   "tomli-w>=1",
 ]
 urls.Changelog = "https://qt-dev-helper.readthedocs.io/en/latest/changelog.html"

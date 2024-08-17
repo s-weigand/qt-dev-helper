@@ -61,6 +61,12 @@ conda install -c conda-forge qt-dev-helper
   compatibility with cpp projects.
   Use the matching version of `qt5-applications` as Qt tooling supplier.
 
+- Q: Error when using `qt5-applications`/`qt6-applications`?
+
+  A: The distributions of `qt5-applications` and `qt6-applications` are using the `pkg_resources`
+  module form `setuptools` which might not be installed and thus fail. Try installing `setuptools`
+  e.g. `pip install setuptools` or `conda install setuptools`.
+
 ## Contributors ✨
 
 Thanks goes out to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
