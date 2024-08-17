@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/s-weigand/cookiecutter-pypackage",
-  "commit": "2e77fcb0d3e51173a1128a08b50f89ff65ed8874",
+  "commit": "a2dc810a651c3043940914925bc1d9f149bd7d1c",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -13,7 +13,7 @@
       "project_short_description": "Toolbox to help develop Qt applications, improving the usability of the existing tooling.",
       "version": "0.0.4",
       "command_line_interface": "typer",
-      "open_source_license": "Apache Software License 2.0",
+      "open_source_license": "Apache Software License",
       "git_host_url": "https://github.com",
       "install_pre_commit": "no",
       "_copy_without_render": ["docs/_templates/autosummary"],
