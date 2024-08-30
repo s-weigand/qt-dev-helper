@@ -347,7 +347,7 @@ class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
             update_dict = {key: value for key, value in update_dict.items() if value is not None}
 
         # This ensures validation of the updated values
-        updated_config = self.__class__(**{**self.model_dump(), **update_dict})
+        updated_config = self.__class__.model_validate({**self.model_dump(), **update_dict})
 
         for key, val in updated_config.model_dump().items():
             setattr(self, key, val)
