@@ -1,5 +1,7 @@
 
-# runtime requirements
+# Runtime requirements
+# Pinned versions for consistent testing environments
+# Update these regularly to avoid outdated dependencies
 # pinned so the bot can create PRs to test with new versions
 pydantic==2.8.2
 pydantic-settings==2.3.4
