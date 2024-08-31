@@ -1,29 +1,34 @@
-"""Tests for qt_dev_helper.cli.commands.designer"""
+"""Tests for qt_dev_helper.cli.commands.designer."""
 
 from __future__ import annotations
 
 import os
-from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Callable
-from typing import Sequence
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
-from tests.conftest import CallQtToolKwargs
 from typer.testing import CliRunner
 
 import qt_dev_helper.cli.commands.designer as designer_cli_module
 from qt_dev_helper.cli.main_app import app
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+    from pathlib import Path
+
+    from _pytest.monkeypatch import MonkeyPatch
+
+    from tests.conftest import CallQtToolKwargs
+
 
 @pytest.mark.parametrize(
-    "cli_options, expected_max_path_slice_index",
-    (
+    ("cli_options", "expected_max_path_slice_index"),
+    [
         ((), 4),
         (("--no-recurse-folder",), 2),
         (("--no-open-files",), 1),
         (("--no-recurse-folder", "--no-open-files"), 1),
-    ),
+    ],
 )
 def test_designer(
     monkeypatch: MonkeyPatch,
@@ -32,7 +37,7 @@ def test_designer(
     cli_options: Sequence[str],
     expected_max_path_slice_index: int,
 ):
-    """designer CLI calls call_qt_tool with correct args."""
+    """Designer CLI calls call_qt_tool with correct args."""
     runner = CliRunner()
     mock_func, call_kwargs = mock_call_qt_tool
     tmp_path = nested_ui_folder[0]

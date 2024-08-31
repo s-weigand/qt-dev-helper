@@ -1,17 +1,13 @@
 """Configuration module."""
 
+from __future__ import annotations
+
 import os
 from enum import Enum
 from pathlib import Path
 from typing import Any
-from typing import Dict
-from typing import List
 from typing import Literal
-from typing import Optional
-from typing import Tuple
-from typing import Type
 from typing import TypedDict
-from typing import Union
 
 import tomli
 from pydantic import Field
@@ -27,34 +23,34 @@ class ConfigNotFoundError(Exception):
     """Error thrown when the config file could not be found."""
 
 
-def _str_list_factory(*args: Any) -> List[str]:
-    """Ensure that a list of arbitrary argument is List[str].
+def _str_list_factory(*args: Any) -> list[str]:
+    """Ensure that a list of arbitrary argument is list[str].
 
     Parameters
     ----------
-    args: Any
+    *args : Any
         Arbitrary arguments.
 
     Returns
     -------
-    List[str]
+    list[str]
         List of ``args`` cast to string.
     """
     return [str(arg) for arg in args]
 
 
 def _check_symmetric_io_definition(
-    config: "Config", input_var_name: str, output_var_name: str
-) -> "Config":
+    config: Config, input_var_name: str, output_var_name: str
+) -> Config:
     """Check that ``input_var_name`` and ``output_var_name`` are both None or both not None.
 
     Parameters
     ----------
-    config: "Config"
+    config : "Config"
         Instance of the Config.
-    input_var_name: str
+    input_var_name : str
         Name of the input path variable.
-    output_var_name: str
+    output_var_name : str
         Name of the output path variable.
 
     Returns
@@ -72,31 +68,32 @@ def _check_symmetric_io_definition(
     if (output_path is None and input_path is not None) or (
         output_path is not None and input_path is None
     ):
-        raise AssertionError(
-            f"The values of {input_var_name!r} and {output_var_name!r} need either be both "
-            "defined or both be undefined.\nGot:\n"
-            f"\t{input_var_name}={input_path!r}\n\t{output_var_name}={output_path!r}"
+        msg = (
+            f"The values of {input_var_name!r} and {output_var_name!r} "
+            "need either be both defined or both be undefined.\n"
+            "Got:\n\t{input_var_name}={input_path!r}\n\t{output_var_name}={output_path!r}"
         )
+        raise AssertionError(msg)
     return config
 
 
 def _check_input_exists(
-    config_dict: Dict[str, Any], input_var_name: str, is_file: bool = False
-) -> Dict[str, Any]:
+    config_dict: dict[str, Any], input_var_name: str, *, is_file: bool = False
+) -> dict[str, Any]:
     """Check that the input path ``config.base_path / input_var`` exists.
 
     Parameters
     ----------
-    config_dict: Dict[str, Any]
+    config_dict : dict[str, Any]
         Dict of the Config.
-    input_var_name: str
+    input_var_name : str
         Variable name, used to get value and format the error message.
-    is_file: bool
+    is_file : bool
         Whether to check if the path is a valid file or folder. Defaults to False
 
     Returns
     -------
-    Dict[str, Any]
+    dict[str, Any]
         Value of ``input_var``
 
     Raises
@@ -122,22 +119,22 @@ def _check_input_exists(
 
 
 def expand_io_paths(
-    config: "Config", input_var_name: str, output_var_name: str
-) -> Tuple[Path, Path]:
+    config: Config, input_var_name: str, output_var_name: str
+) -> tuple[Path, Path]:
     """Expand relative io paths with ``base_path`` from config.
 
     Parameters
     ----------
-    config: Config
+    config : Config
         Config instance, needed to determine the base path.
-    input_var_name: str
+    input_var_name : str
         Name of the variable holding the input path string.
-    output_var_name: str
+    output_var_name : str
         Name of the variable holding the input path string.
 
     Returns
     -------
-    Tuple[Path, Path]
+    tuple[Path, Path]
         Expanded input path and expanded output path.
 
     Raises
@@ -147,12 +144,13 @@ def expand_io_paths(
     """
     input_var: str = getattr(config, input_var_name)
     output_var: str = getattr(config, output_var_name)
-    base_path: Path = getattr(config, "base_path")
+    base_path: Path = config.base_path
     if input_var is None or output_var is None:
-        raise QtDevHelperConfigError(
+        msg = (
             f"Both {input_var_name!r} and {output_var_name!r} need to be defined.\n"
-            f"Got:\n\t{input_var_name}={output_var!r}\n\n{input_var_name}={output_var!r}"
+            "Got:\n\t{input_var_name}={output_var!r}\n\n{input_var_name}={output_var!r}"
         )
+        raise QtDevHelperConfigError(msg)
     return base_path / input_var, base_path / output_var
 
 
@@ -167,7 +165,7 @@ class UicKwargs(TypedDict, total=False):
     """Keyword arguments to be used with ``compile_ui_file``."""
 
     generator: Literal["python", "cpp"]
-    uic_args: List[str]
+    uic_args: list[str]
     form_import: bool
 
 
@@ -175,7 +173,7 @@ class RccKwargs(TypedDict, total=False):
     """Keyword arguments to be used with ``compile_resource_file``."""
 
     generator: Literal["python", "cpp"]
-    rcc_args: List[str]
+    rcc_args: list[str]
 
 
 class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
@@ -185,10 +183,10 @@ class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
         description="Directory the config was loaded from, used to resolve relative paths."
     )
     # Style generator options
-    root_sass_file: Optional[str] = Field(
+    root_sass_file: str | None = Field(
         default=None, description="Scss stylesheet with the style for the whole application."
     )
-    root_qss_file: Optional[str] = Field(
+    root_qss_file: str | None = Field(
         default=None,
         description=(
             "Qss stylesheet with the style for the whole application, "
@@ -204,85 +202,91 @@ class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
         default=True, description="Whether to keep the original folder structure or flatten it."
     )
     # Qt ui code generator options
-    ui_files_folder: Optional[str] = Field(
+    ui_files_folder: str | None = Field(
         default=None, description="Root folder containing *.ui files."
     )
-    generated_ui_code_folder: Optional[str] = Field(
+    generated_ui_code_folder: str | None = Field(
         default=None, description="Root folder to save code generated from *.ui files to."
     )
-    uic_args: List[str] = Field(
+    uic_args: list[str] = Field(
         default_factory=_str_list_factory,
         description="Additional arguments for the uic executable.",
     )
     form_import: bool = Field(default=True, description="Python: generate imports relative to '.'")
     # Qt rc code generator options
-    resource_folder: Optional[str] = Field(
+    resource_folder: str | None = Field(
         default=None, description="Root folder containing *.qrc files."
     )
-    generated_rc_code_folder: Optional[str] = Field(
+    generated_rc_code_folder: str | None = Field(
         default=None, description="Root folder to save code generated from *.qrc files to."
     )
-    rcc_args: List[str] = Field(
+    rcc_args: list[str] = Field(
         default_factory=_str_list_factory,
         description="Additional arguments for the rcc executable.",
     )
 
     @model_validator(mode="before")
-    def _validate_style_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_style_input_path(  # noqa: DOC
+        cls: type[Config], data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Validate that ``root_sass_file`` is a valid path if defined."""
         return _check_input_exists(data, "root_sass_file", is_file=True)
 
     @model_validator(mode="before")
-    def _validate_ui_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_ui_input_path(  # noqa: DOC
+        cls: type[Config], data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Validate that ``ui_files_folder`` is a valid path if defined."""
         return _check_input_exists(data, "ui_files_folder")
 
     @model_validator(mode="before")
-    def _validate_rc_input_path(cls: Type["Config"], data: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_rc_input_path(  # noqa: DOC
+        cls: type[Config], data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Validate that ``resource_folder`` is a valid path if defined."""
         return _check_input_exists(data, "resource_folder")
 
     @model_validator(mode="after")
-    def _validate_styles_io(self) -> "Config":
+    def _validate_styles_io(self) -> Config:  # noqa: DOC
         """``root_sass_file`` and ``root_qss_file`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "root_sass_file", "root_qss_file")
 
     @model_validator(mode="after")
-    def _validate_ui_io(self) -> "Config":
+    def _validate_ui_io(self) -> Config:  # noqa: DOC
         """``ui_files_folder`` and ``generated_ui_code_folder`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "ui_files_folder", "generated_ui_code_folder")
 
     @model_validator(mode="after")
-    def _validate_rc_io(self) -> "Config":
+    def _validate_rc_io(self) -> Config:  # noqa: DOC
         """``resource_folder`` and ``generated_rc_code_folder`` are both defined or undefined."""
         return _check_symmetric_io_definition(self, "resource_folder", "generated_rc_code_folder")
 
-    def root_style_paths(self) -> Tuple[Path, Path]:
+    def root_style_paths(self) -> tuple[Path, Path]:
         """Resolve paths to root style files.
 
         Returns
         -------
-        Tuple[Path, Path]
+        tuple[Path, Path]
             Paths to ``root_sass_file`` and ``root_qss_file``.
         """
         return expand_io_paths(self, "root_sass_file", "root_qss_file")
 
-    def ui_folder_paths(self) -> Tuple[Path, Path]:
+    def ui_folder_paths(self) -> tuple[Path, Path]:
         """Resolve paths to root style files.
 
         Returns
         -------
-        Tuple[Path, Path]
+        tuple[Path, Path]
             Paths to ``ui_files_folder`` and ``generated_ui_code_folder``.
         """
         return expand_io_paths(self, "ui_files_folder", "generated_ui_code_folder")
 
-    def rc_folder_paths(self) -> Tuple[Path, Path]:
+    def rc_folder_paths(self) -> tuple[Path, Path]:
         """Resolve paths to root style files.
 
         Returns
         -------
-        Tuple[Path, Path]
+        tuple[Path, Path]
             Paths to ``resource_folder`` and ``generated_rc_code_folder``.
         """
         return expand_io_paths(self, "resource_folder", "generated_rc_code_folder")
@@ -329,21 +333,21 @@ class Config(BaseSettings, extra="forbid"):  # type:ignore[call-arg]
         self.resource_folder = None
         self.generated_rc_code_folder = None
 
-    def update(self, update_dict: Dict[str, Any], filter_none: bool = True) -> None:
+    def update(self, update_dict: dict[str, Any], *, filter_none: bool = True) -> None:
         """Update config values.
 
         Parameters
         ----------
-        update_dict: Dict[str, Any]
+        update_dict : dict[str, Any]
             Dict containing updated values.
-        filter_none: bool
+        filter_none : bool
             Whether or not to filter None values before updating. Defaults to True
         """
         if filter_none is True:
             update_dict = {key: value for key, value in update_dict.items() if value is not None}
 
         # This ensures validation of the updated values
-        updated_config = self.__class__(**{**self.model_dump(), **update_dict})
+        updated_config = self.__class__.model_validate({**self.model_dump(), **update_dict})
 
         for key, val in updated_config.model_dump().items():
             setattr(self, key, val)
@@ -354,7 +358,7 @@ def load_toml_config(path: Path) -> Config:
 
     Parameters
     ----------
-    path: Path
+    path : Path
         Path to the toml config file.
 
     Returns
@@ -370,21 +374,22 @@ def load_toml_config(path: Path) -> Config:
     toml_config = tomli.loads(path.read_text())
     qt_dev_helper_config = toml_config.get("tool", {}).get("qt-dev-helper", {})
     if len(qt_dev_helper_config) > 0:
-        return Config(**{**qt_dev_helper_config, "base_path": path.parent})
-    raise ConfigNotFoundError(f"Could not find 'qt-dev-helper' config in {path.as_posix()}")
+        return Config.model_validate({**qt_dev_helper_config, "base_path": path.parent})
+    msg = f"Could not find 'qt-dev-helper' config in {path.as_posix()}"
+    raise ConfigNotFoundError(msg)
 
 
 def find_config(
-    start_path: Optional[Union[Path, str]] = None, config_file_name: str = "pyproject.toml"
+    start_path: Path | str | None = None, config_file_name: str = "pyproject.toml"
 ) -> Path:
     """Find config file based on its name and start path, by traversing parent paths.
 
     Parameters
     ----------
-    start_path: Optional[Union[Path,str]]
+    start_path : Path | str | None
         Path to start looking for the config file.
         Defaults to None which means the current dir will be used
-    config_file_name: str
+    config_file_name : str
         Name of the config file. Defaults to "pyproject.toml"
 
     Returns
@@ -408,15 +413,16 @@ def find_config(
         file_path = path / config_file_name
         if file_path in set(path.iterdir()):
             return file_path
-    raise ConfigNotFoundError(f"Could not find config file {config_file_name!r}.")
+    msg = f"Could not find config file {config_file_name!r}."
+    raise ConfigNotFoundError(msg)
 
 
-def load_config(start_path: Optional[Union[Path, str]] = None) -> Config:
+def load_config(start_path: Path | str | None = None) -> Config:
     """Load config from file.
 
     Parameters
     ----------
-    start_path: Optional[Union[Path,str]]
+    start_path : Path | str | None
         Path to start looking for the config file.
         Defaults to None which means the current dir will be used
 
@@ -437,4 +443,5 @@ def load_config(start_path: Optional[Union[Path, str]] = None) -> Config:
         except ConfigNotFoundError:
             continue
 
-    raise ConfigNotFoundError("No config file containing 'qt-dev-helper' config could be found.")
+    msg = "No config file containing 'qt-dev-helper' config could be found."
+    raise ConfigNotFoundError(msg)

@@ -4,10 +4,26 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      time: "04:00"
+      day: friday
+      time: "20:00"
+      timezone: Europe/Amsterdam
+    groups:
+      runtime-dependencies:
+        update-types:
+          - minor
+          - patch
+    rebase-strategy: "disabled"
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      time: "04:00"
+      day: friday
+      time: "20:00"
+      timezone: Europe/Amsterdam
+    groups:
+      GH-Actions:
+        update-types:
+          - minor
+          - patch
+    rebase-strategy: "disabled"

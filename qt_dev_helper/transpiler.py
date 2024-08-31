@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Callable
 from typing import Literal
-from typing import Sequence
 from typing import cast
 
 import qtsass
@@ -20,6 +20,9 @@ from qt_dev_helper.qt_tools import call_qt_tool
 from qt_dev_helper.utils import find_matching_files
 from qt_dev_helper.utils import format_rel_output_path
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 
 def transpile_sass(sass_file: str | Path, qss_file: str | Path) -> Path:
     """Transpile scss file to qss.
@@ -29,9 +32,9 @@ def transpile_sass(sass_file: str | Path, qss_file: str | Path) -> Path:
 
     Parameters
     ----------
-    sass_file: str | Path
+    sass_file : str | Path
         Path to the sass input file.
-    qss_file: str | Path
+    qss_file : str | Path
         Path to output the compiled qss file to.
 
     Returns
@@ -62,15 +65,15 @@ def compile_ui_file(
 
     Parameters
     ----------
-    ui_file: str | Path
+    ui_file : str | Path
         Path to the ui file.
-    output_path: str | Path
+    output_path : str | Path
         Path the output file should be saved to.
-    generator: Literal["python", "cpp"]
+    generator : Literal["python", "cpp"]
         Language to generate code for. Defaults to "python"
-    form_import: bool
+    form_import : bool
         Sets the '--from-imports' flag when used with python. Defaults to True
-    uic_args: Sequence[str]
+    uic_args : Sequence[str]
         Additional args for 'uic' (use '--help' for details). Defaults to ()
 
     Returns
@@ -101,13 +104,13 @@ def compile_resource_file(
 
     Parameters
     ----------
-    qrc_file: str | Path
+    qrc_file : str | Path
         Path to the resource file.
-    output_path: str | Path
+    output_path : str | Path
         Path the output file should be saved to.
-    generator: Literal["python", "cpp"]
+    generator : Literal["python", "cpp"]
         Language to generate code for. Defaults to "python"
-    rcc_args: Sequence[str]
+    rcc_args : Sequence[str]
         Additional args for 'rcc' (use '--help' for details). Defaults to ()
 
     Returns
@@ -138,19 +141,19 @@ def build_uis(
 
     Parameters
     ----------
-    ui_files_folder: Path
+    ui_files_folder : Path
         Base path containing the input ui files.
-    generated_ui_code_folder: Path
+    generated_ui_code_folder : Path
         Base path to save generated code from ui files to.
-    flatten_path: bool
+    flatten_path : bool
         Whether or not to flatten the folder structure of the ui files
         (For the 'python'generator this should be True in order for imports
         to resolve). Defaults to True
-    uic_kwargs: UicKwargs | None
+    uic_kwargs : UicKwargs | None
         Keyword arguments passed to the uic executable. Defaults to None
-    log_function: Callable[..., None]
+    log_function : Callable[..., None]
         Function used to print log messages. Defaults to rich.print
-    recurse_folder: bool
+    recurse_folder : bool
         Whether or not to recurse directories searching for files. Defaults to True
 
     Returns
@@ -194,19 +197,19 @@ def build_resources(
 
     Parameters
     ----------
-    resource_folder: Path
+    resource_folder : Path
         Base path containing the input qrc files.
-    generated_rc_code_folder: Path
+    generated_rc_code_folder : Path
         Base path to save generated code from qrc files to.
-    flatten_path: bool
+    flatten_path : bool
         Whether or not to flatten the folder structure of the ui files
         (For the 'python'generator this should be True in order for imports
         to resolve). Defaults to True
-    rcc_kwargs: RccKwargs | None
+    rcc_kwargs : RccKwargs | None
         Keyword arguments passed to the rcc executable. Defaults to None
-    log_function: Callable[..., None]
+    log_function : Callable[..., None]
         Function used to print log messages. Defaults to rich.print
-    recurse_folder: bool
+    recurse_folder : bool
         Whether or not to recurse directories searching for files. Defaults to True
 
     Returns
@@ -238,6 +241,7 @@ def build_resources(
 def build_all_assets(
     config: Config | str | Path,
     log_function: Callable[..., None] = rich.print,
+    *,
     recurse_folder: bool = True,
 ) -> list[Path]:
     """Build all assets based on the provided configuration.
@@ -246,12 +250,12 @@ def build_all_assets(
 
     Parameters
     ----------
-    config: Config
+    config : Config | str | Path
         Configuration to use for building assets.
         If a path is passed it will try to find the config.
-    log_function: Callable[..., None]
+    log_function : Callable[..., None]
         Function used to print log messages. Defaults to rich.print
-    recurse_folder: bool
+    recurse_folder : bool
         Whether or not to recurse directories searching for files. Defaults to True
 
     Returns

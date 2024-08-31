@@ -4,67 +4,62 @@ repos:
   ###################
   #    FORMATTER    #
   ###################
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: "2.2.1"
+    hooks:
+      - id: pyproject-fmt
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
       - id: check-ast
       - id: check-builtin-literals
       - id: end-of-file-fixer
+      - id: check-case-conflict
       - id: trailing-whitespace
       - id: debug-statements
-      - id: fix-encoding-pragma
-        args: [--remove]
+      - id: mixed-line-ending
+        args: [--fix=lf]
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.17.0
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.7.5
     hooks:
-      - id: pyupgrade
-        args: [--py38-plus]
+      - id: docformatter
+        additional_dependencies: [tomli]
+        args: [--in-place, --config, ./pyproject.toml]
 
   - repo: https://github.com/MarcoGorelli/absolufy-imports
     rev: v0.3.1
     hooks:
       - id: absolufy-imports
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-
-  - repo: https://github.com/python/black
-    rev: 24.8.0
-    hooks:
-      - id: black
-        language_version: python3
-
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8 # Use the sha or tag you want to point at
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         additional_dependencies: ["prettier@3.3.2"]
 
-  - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.5.0
-    hooks:
-      - id: setup-cfg-fmt
-        args: [--include-version-classifiers]
-
   ###################
   #     LINTER      #
   ###################
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.1.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.6.3
     hooks:
-      - id: flake8
-
-  - repo: https://github.com/asottile/yesqa
-    rev: v1.5.0
-    hooks:
-      - id: yesqa
-        additional_dependencies: [flake8-docstrings]
+      - id: ruff
+        name: "ruff sort imports"
+        args:
+          - "--fix"
+          - "--select=I"
+        alias: isort
+      - id: ruff-format
+      # Commands above are both formatters an not linters
+      # See also: https://github.com/astral-sh/ruff/discussions/7310#discussioncomment-7102010
+      - id: ruff
+        name: "ruff lint"
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.11.1
+    rev: v1.11.2
     hooks:
       - id: mypy
         exclude: "docs"
@@ -73,17 +68,21 @@ repos:
   ###################
   #   LINTER DOCS   #
   ###################
-  - repo: https://github.com/PyCQA/pydocstyle
-    rev: 6.3.0
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
     hooks:
-      - id: pydocstyle
-        exclude: "^docs|tests|setup.py"
-
-  - repo: https://github.com/terrencepreilly/darglint
-    rev: v1.8.1
-    hooks:
-      - id: darglint
-        exclude: "^docs|tests|setup.py|qt_dev_helper/cli"
+      - id: flake8
+        alias: flake8-docs
+        args:
+          - "--select=DOC"
+          - "--extend-ignore=DOC502,DOC601,DOC603"
+          - "--color=always"
+          - "--require-return-section-when-returning-nothing=False"
+          - "--allow-init-docstring=True"
+          - "--skip-checking-short-docstrings=False"
+        name: "flake8 lint docstrings"
+        exclude: "^(docs/|tests?/)"
+        additional_dependencies: [pydoclint==0.5.6]
 
   - repo: https://github.com/econchick/interrogate
     rev: 1.7.0
@@ -92,18 +91,6 @@ repos:
         args: [-v, --config=pyproject.toml, "qt_dev_helper"]
         pass_filenames: false
 
-  - repo: https://github.com/myint/rstcheck
-    rev: "v6.2.4"
-    hooks:
-      - id: rstcheck
-        additional_dependencies: [sphinx]
-        exclude: "docs/_templates"
-
-  - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.10.0
-    hooks:
-      - id: rst-backticks
-
   - repo: https://github.com/codespell-project/codespell
     rev: v2.3.0
     hooks:
@@ -111,3 +98,8 @@ repos:
         types: [file]
         types_or: [python, pyi, markdown, rst, jupyter]
         args: [-L nnumber]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: "v1.7.1"
+    hooks:
+      - id: actionlint

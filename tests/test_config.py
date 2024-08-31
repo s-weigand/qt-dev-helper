@@ -1,13 +1,13 @@
+"""Tests for ``qt_dev_helper.config``."""
+
 from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 from pydantic import ValidationError
-from tests import REPO_ROOT
-from tests import TEST_DATA
 
 from qt_dev_helper.config import Config
 from qt_dev_helper.config import ConfigNotFoundError
@@ -17,11 +17,16 @@ from qt_dev_helper.config import UicKwargs
 from qt_dev_helper.config import find_config
 from qt_dev_helper.config import load_config
 from qt_dev_helper.config import load_toml_config
+from tests import REPO_ROOT
+from tests import TEST_DATA
+
+if TYPE_CHECKING:
+    from _pytest.monkeypatch import MonkeyPatch
 
 
 @pytest.mark.parametrize(
-    "root_sass_file, root_qss_file",
-    (("assets/styles/theme.scss", None), (None, "output/theme.qss")),
+    ("root_sass_file", "root_qss_file"),
+    [("assets/styles/theme.scss", None), (None, "output/theme.qss")],
 )
 def test_config_validate_style_paths_asymmetric(
     root_sass_file: str | None, root_qss_file: str | None
@@ -35,8 +40,8 @@ def test_config_validate_style_paths_asymmetric(
 
 
 @pytest.mark.parametrize(
-    "ui_files_folder, generated_ui_code_folder",
-    (("assets/ui_files", None), (None, "outputs/ui_files")),
+    ("ui_files_folder", "generated_ui_code_folder"),
+    [("assets/ui_files", None), (None, "outputs/ui_files")],
 )
 def test_config_validate_ui_paths_asymmetric(
     ui_files_folder: str | None, generated_ui_code_folder: str | None
@@ -55,8 +60,8 @@ def test_config_validate_ui_paths_asymmetric(
 
 
 @pytest.mark.parametrize(
-    "resource_folder, generated_rc_code_folder",
-    (("assets", None), (None, "outputs/rc")),
+    ("resource_folder", "generated_rc_code_folder"),
+    [("assets", None), (None, "outputs/rc")],
 )
 def test_config_validate_rc_paths_asymmetric(
     resource_folder: str | None, generated_rc_code_folder: str | None
@@ -75,24 +80,25 @@ def test_config_validate_rc_paths_asymmetric(
 
 
 @pytest.mark.parametrize(
-    "var_name, var_value",
-    (
+    ("var_name", "var_value"),
+    [
         ("root_sass_file", "not_a_path"),
         ("root_sass_file", "assets/styles"),
         ("ui_files_folder", "not_a_path"),
         ("ui_files_folder", "assets/styles/theme.scss"),
         ("resource_folder", "not_a_path"),
         ("resource_folder", "assets/styles/theme.scss"),
-    ),
+    ],
 )
 def test_config_validate_path_exists_or_none(var_name: str, var_value: str):
+    """Raise error on wrong type."""
     with pytest.raises(ValidationError) as exc_info:
         Config(base_path=TEST_DATA, **{var_name: var_value})
     assert f"The value of {var_name!r} needs to be a valid path or None." in str(exc_info.value)
 
 
 def test_config_path_extraction(dummy_config: Config):
-    """Extract resolved paths from config"""
+    """Extract resolved paths from config."""
 
     base_path = dummy_config.base_path
 
@@ -211,14 +217,14 @@ def test_load_toml_config_no_tool_config(tmp_path: Path):
 
 
 @pytest.mark.parametrize(
-    "start_path, config_file_name, expected",
-    (
+    ("start_path", "config_file_name", "expected"),
+    [
         (REPO_ROOT, "pyproject.toml", REPO_ROOT / "pyproject.toml"),
-        (REPO_ROOT, "setup.cfg", REPO_ROOT / "setup.cfg"),
+        (TEST_DATA, "setup.cfg", TEST_DATA / "setup.cfg"),
         (TEST_DATA, "pyproject.toml", TEST_DATA / "pyproject.toml"),
         (TEST_DATA.parent, "pyproject.toml", REPO_ROOT / "pyproject.toml"),
         (None, "pyproject.toml", REPO_ROOT / "pyproject.toml"),
-    ),
+    ],
 )
 def test_find_config(
     monkeypatch: MonkeyPatch, start_path: Path, config_file_name: str, expected: Path
@@ -239,7 +245,7 @@ def test_find_config_error(tmp_path: Path):
     assert str(exec_info.value) == "Could not find config file 'pyproject.toml'."
 
 
-@pytest.mark.parametrize("rel_path", ("", "assets/styles/theme.scss"))
+@pytest.mark.parametrize("rel_path", ["", "assets/styles/theme.scss"])
 def test_load_config(dummy_config: Config, rel_path: str):
     """Load config also works when path is a file which isn't the config file."""
 

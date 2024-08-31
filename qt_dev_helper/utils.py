@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from fnmatch import fnmatch
 from pathlib import Path
-from typing import Sequence
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 def format_rel_output_path(
@@ -14,13 +17,13 @@ def format_rel_output_path(
 
     Parameters
     ----------
-    root_folder: Path
+    root_folder : Path
         Root folder of the file resides in.
-    file_path: Path
+    file_path : Path
         Path to the file to be formatted.
-    format_string: str
+    format_string : str
         String with format instruction 'file_stem' (e.g. 'Ui_{file_stem}.py').
-    flatten_path: bool
+    flatten_path : bool
         Whether or not to persist the original folder structure. Defaults to True
 
     Returns
@@ -28,7 +31,7 @@ def format_rel_output_path(
     Path
         Relative path in respect to ``root_folder`` for the formatted file.
     """
-    rel_file_parent_path = Path("")
+    rel_file_parent_path = Path()
     file_name = format_string.format(file_stem=file_path.stem)
     if flatten_path is False:
         rel_file_parent_path = file_path.relative_to(root_folder).parent
@@ -43,16 +46,16 @@ def find_matching_files(
 
     Parameters
     ----------
-    files: Sequence[Path]
+    files : Sequence[Path]
         List of paths (files or folders) to check for matching files.
-    file_pattern: str
+    file_pattern : str
         Pattern to match files, this a Unix shell-style pattern and nto an regex.
-    recurse_folder: bool
+    recurse_folder : bool
         Whether or not to recurse directories searching for files. Defaults to True
 
     Returns
     -------
-    tuple[str,...]
+    tuple[str, ...]
         Tuple of posix conform string paths to files matching ``file_pattern``.
     """
     file_paths = set()

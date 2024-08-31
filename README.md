@@ -9,7 +9,7 @@
 [![Documentation Status](https://readthedocs.org/projects/qt-dev-helper/badge/?version=latest)](https://qt-dev-helper.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/s-weigand/qt-dev-helper/branch/main/graph/badge.svg)](https://codecov.io/gh/s-weigand/qt-dev-helper)
 [![Documentation Coverage](https://raw.githubusercontent.com/s-weigand/qt-dev-helper/main/docs/_static/interrogate_badge.svg)](https://github.com/s-weigand/qt-dev-helper)
-[![Code style Python: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 [![All Contributors](https://img.shields.io/github/all-contributors/s-weigand/qt-dev-helper)](#contributors)
 
@@ -60,6 +60,12 @@ conda install -c conda-forge qt-dev-helper
   A: `PyQt5` only ships a python specific version of `uic` and `rcc` breaking the tool API and
   compatibility with cpp projects.
   Use the matching version of `qt5-applications` as Qt tooling supplier.
+
+- Q: Error when using `qt5-applications`/`qt6-applications`?
+
+  A: The distributions of `qt5-applications` and `qt6-applications` are using the `pkg_resources`
+  module form `setuptools` which might not be installed and thus fail. Try installing `setuptools`
+  e.g. `pip install setuptools` or `conda install setuptools`.
 
 ## Contributors ✨
 

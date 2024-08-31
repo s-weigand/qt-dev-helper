@@ -1,23 +1,23 @@
 [build-system]
-# needs to be extendet with local path to qt-dev-helper in tests
-# qt-dev-helper@file:///<qt-dev-helper local path>
-requires = ["setuptools","PySide6-Essentials","qt-dev-helper"]
 build-backend = "setuptools.build_meta"
 
+# needs to be extendet with local path to qt-dev-helper in tests
+# qt-dev-helper@file:///<qt-dev-helper local path>
+requires = [ "pyside6-essentials", "qt-dev-helper", "setuptools" ]
 
 [tool.qt-dev-helper]
 # Style generator options
-root_sass_file="assets/styles/theme.scss"
-root_qss_file="outputs/theme.qss"
+root_sass_file = "assets/styles/theme.scss"
+root_qss_file = "outputs/theme.qss"
 # General Qt code generator options
-generator="python"
-flatten_folder_structure=true
+generator = "python"
+flatten_folder_structure = true
 # Qt ui code generator options
-ui_files_folder="assets/ui_files"
-generated_ui_code_folder="outputs/ui_files"
-uic_args=["--idbased"]
-form_import=true
+ui_files_folder = "assets/ui_files"
+generated_ui_code_folder = "outputs/ui_files"
+uic_args = [ "--idbased" ]
+form_import = true
 # Qt rc code generator options
-resource_folder="assets"
-generated_rc_code_folder="outputs/ui_files"
-rcc_args=["--compress-algo", "zlib"]
+resource_folder = "assets"
+generated_rc_code_folder = "outputs/ui_files"
+rcc_args = [ "--compress-algo", "zlib" ]

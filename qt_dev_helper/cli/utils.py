@@ -8,12 +8,12 @@ def parse_optional_args_string(optional_args_string: str | None) -> list[str] | 
 
     Parameters
     ----------
-    optional_args_string: str | None
+    optional_args_string : str | None
         Optional argument string with coma separated arguments if not None.
 
     Returns
     -------
-    list[str] |None
+    list[str] | None
         None or list of arguments
     """
     if optional_args_string is None:

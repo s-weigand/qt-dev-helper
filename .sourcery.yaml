@@ -1,7 +1,7 @@
 ignore: []
 
 refactor:
-  skip: [simplify-boolean-comparison]
+  skip: [simplify-boolean-comparison, dont-import-test-modules]
 
 metrics:
   quality_threshold: 25.0
