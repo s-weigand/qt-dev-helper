@@ -3,7 +3,7 @@
 # Pinned versions for consistent testing environments
 # Update these regularly to avoid outdated dependencies
 # pinned so the bot can create PRs to test with new versions
-pydantic==2.9.1
+pydantic==2.9.2
 pydantic-settings==2.5.2
 rich==13.8.1
 tomli==2.0.1
