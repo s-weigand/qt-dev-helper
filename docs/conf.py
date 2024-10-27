@@ -56,6 +56,7 @@ linkcheck_ignore = [
     r"https://github\.com/s-weigand/qt-dev-helper/actions",
     r"https://github\.com/s-weigand/qt-dev-helper/workflows/Tests/badge\.svg",
     r"https://raw\.githubusercontent\.com/*",
+    r"https://opensource\.org/licenses/Apache-2\.0"
 ]
 
 # The master toctree document.
