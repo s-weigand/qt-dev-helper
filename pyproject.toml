@@ -11,7 +11,7 @@ keywords = [ "qt_dev_helper" ]
 license = { file = "LICENSE" }
 
 authors = [ { name = "Sebastian Weigand", email = "s.weigand.phy@gmail.com" } ]
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.9"
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Intended Audience :: Developers",
@@ -22,6 +22,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
 dynamic = [ "version" ]
 

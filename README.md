@@ -17,8 +17,20 @@ Toolbox to help develop Qt applications, improving the usability of the existing
 
 ## Installation
 
+To install the CLI you can run one of the following commands (assuming you use `pyside6` as Qt tooling suppliers):
+
 ```console
-pip install qt-dev-helper
+uv pip install "qt-dev-helper[cli,pyside6]"
+```
+
+> [!NOTE]
+> While it is also possible to install `qt-dev-helper` globally with `uv tool install "qt-dev-helper[cli,pyside6]"`
+> it is not recommend since it might cause version incompatibilities.
+
+OR
+
+```console
+pip install "qt-dev-helper[cli,pyside6]"
 ```
 
 OR
@@ -26,6 +38,11 @@ OR
 ```console
 conda install -c conda-forge qt-dev-helper
 ```
+
+> [!IMPORTANT]
+> If you do not have the `uic` and `rcc` executables on your `PATH`,
+> you still need to install the Qt tooling supplier with `pip` since there either is no conda version
+> or conda version comes without tools (e.g. `pyside6`)
 
 ## Features
 
@@ -44,7 +61,7 @@ conda install -c conda-forge qt-dev-helper
   - `PySide6-Essentials`
   - `qt6-applications`
   - `qt5-applications`
-- Ability to open all files in a folder in QtDesigner
+- Ability to open all `*.ui` files in a folder in QtDesigner
 
 ## Planned features
 
