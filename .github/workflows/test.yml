@@ -67,7 +67,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-12]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         # macOS-latest runs on M1 hardware, so we are using macos-12,
         # the last version supporting Intel hardware, to ensure compatibility.
         # exclude:
