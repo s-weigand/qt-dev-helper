@@ -45,9 +45,9 @@ def clean_text(text: str) -> str:
 
 def generated_files_equal(result: Path, expected: Path):
     """Compare generated files."""
-    assert clean_text(result.read_text()) == clean_text(
-        expected.read_text()
-    ), f"{result=}\n{expected=}"
+    assert clean_text(result.read_text()) == clean_text(expected.read_text()), (
+        f"{result=}\n{expected=}"
+    )
 
 
 def test_transpile_sass(tmp_path: Path, dummy_config: Config):
