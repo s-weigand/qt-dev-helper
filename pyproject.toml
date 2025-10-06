@@ -35,7 +35,7 @@ dependencies = [
   "tomli>=2.0.1",
 ]
 optional-dependencies.cli = [ "typer>=0.12.4" ]
-optional-dependencies.dev = [ "qt-dev-helper[docs,test,cli]" ]
+optional-dependencies.dev = [ "qt-dev-helper[cli,docs,test]" ]
 optional-dependencies.docs = [
   "autodoc-pydantic>=2.2",
   "myst-parser>=2",
