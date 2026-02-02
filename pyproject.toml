@@ -68,9 +68,6 @@ urls.Source = "https://github.com/s-weigand/qt-dev-helper"
 urls.Tracker = "https://github.com/s-weigand/qt-dev-helper/issues"
 scripts."qt_dev_helper" = "qt_dev_helper.cli.main_app:app"
 
-[tool.hatch.version]
-path = "qt_dev_helper/__init__.py"
-
 [tool.hatch.build.targets.sdist]
 include = [ "/qt_dev_helper", "/tests" ]
 
@@ -78,6 +75,9 @@ include = [ "/qt_dev_helper", "/tests" ]
 features = [ "dev" ]
 python = "3.9"
 installer = "uv"
+
+[tool.hatch.version]
+path = "qt_dev_helper/__init__.py"
 
 [tool.docformatter]
 black = true
@@ -112,13 +112,6 @@ source = [
   "qt_dev_helper",
   "*/site-packages/qt_dev_helper",
 ]
-[tool.coverage.run]
-branch = true
-omit = [
-  'qt_dev_helper/cli/_cli_docs.py',
-  '*/site-packages/qt_dev_helper/cli/_cli_docs.py',
-]
-
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
 exclude_lines = [
@@ -138,6 +131,13 @@ exclude_lines = [
   'if __name__ == .__main__.:',
   # only accessible during typechecking
   'if TYPE_CHECKING:',
+]
+
+[tool.coverage.run]
+branch = true
+omit = [
+  'qt_dev_helper/cli/_cli_docs.py',
+  '*/site-packages/qt_dev_helper/cli/_cli_docs.py',
 ]
 
 [tool.mypy]
