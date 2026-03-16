@@ -63,7 +63,7 @@ urls.Documentation = "https://qt-dev-helper.readthedocs.io"
 urls.Homepage = "https://github.com/s-weigand/qt-dev-helper"
 urls.Source = "https://github.com/s-weigand/qt-dev-helper"
 urls.Tracker = "https://github.com/s-weigand/qt-dev-helper/issues"
-scripts."qt_dev_helper" = "qt_dev_helper.cli.main_app:app"
+scripts.qt_dev_helper = "qt_dev_helper.cli.main_app:app"
 
 [tool.hatch]
 build.targets.sdist.include = [ "/qt_dev_helper", "/tests" ]
@@ -141,7 +141,6 @@ disallow_incomplete_defs = true
 overrides = [ { module = "tests.*", disallow_untyped_defs = false, disallow_incomplete_defs = false } ]
 
 # For now this is not used because pydoclint does not support toml when used with flake8
-
 [tool.interrogate]
 exclude = [ "docs", "tests" ]
 ignore-init-module = true
