@@ -84,6 +84,19 @@ exclude = "^(docs/|tests?/)"
 require-return-section-when-returning-nothing = false
 allow-init-docstring = true
 
+[tool.mypy]
+plugins = "pydantic.mypy"
+exclude = "^docs/"
+ignore_missing_imports = true
+scripts_are_modules = true
+show_error_codes = true
+warn_unused_configs = true
+warn_unused_ignores = true
+strict_equality = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+overrides = [ { module = "tests.*", disallow_untyped_defs = false, disallow_incomplete_defs = false } ]
+
 [tool.pytest]
 ini_options.addopts = [
   "--cov=qt_dev_helper",
@@ -126,19 +139,6 @@ report.exclude_lines = [
   "raise AssertionError",
   "raise NotImplementedError",
 ]
-
-[tool.mypy]
-plugins = "pydantic.mypy"
-exclude = "^docs/"
-ignore_missing_imports = true
-scripts_are_modules = true
-show_error_codes = true
-warn_unused_configs = true
-warn_unused_ignores = true
-strict_equality = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-overrides = [ { module = "tests.*", disallow_untyped_defs = false, disallow_incomplete_defs = false } ]
 
 # For now this is not used because pydoclint does not support toml when used with flake8
 [tool.interrogate]
