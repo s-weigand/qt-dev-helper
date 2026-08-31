@@ -66,11 +66,11 @@ urls.Tracker = "https://github.com/s-weigand/qt-dev-helper/issues"
 scripts.qt_dev_helper = "qt_dev_helper.cli.main_app:app"
 
 [tool.hatch]
+version.path = "qt_dev_helper/__init__.py"
 build.targets.sdist.include = [ "/qt_dev_helper", "/tests" ]
-envs.default.features = [ "dev" ]
 envs.default.python = "3.9"
 envs.default.installer = "uv"
-version.path = "qt_dev_helper/__init__.py"
+envs.default.features = [ "dev" ]
 
 [tool.docformatter]
 black = true
@@ -84,18 +84,25 @@ exclude = "^(docs/|tests?/)"
 require-return-section-when-returning-nothing = false
 allow-init-docstring = true
 
+# For now this is not used because pydoclint does not support toml when used with flake8
+[tool.interrogate]
+fail-under = 100
+ignore-init-module = true
+ignore-regex = [ ".*QtToolExecutionError.*", ".*QtToolNotFoundError.*" ]
+exclude = [ "docs", "tests" ]
+
 [tool.mypy]
-plugins = "pydantic.mypy"
 exclude = "^docs/"
 ignore_missing_imports = true
-scripts_are_modules = true
-show_error_codes = true
-warn_unused_configs = true
-warn_unused_ignores = true
-strict_equality = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
+warn_unused_ignores = true
+strict_equality = true
+plugins = "pydantic.mypy"
+scripts_are_modules = true
+warn_unused_configs = true
 overrides = [ { module = "tests.*", disallow_untyped_defs = false, disallow_incomplete_defs = false } ]
+show_error_codes = true
 
 [tool.pytest]
 ini_options.addopts = [
@@ -114,11 +121,11 @@ ini_options.env = [
 ]
 
 [tool.coverage]
-run.branch = true
 run.omit = [
   "*/site-packages/qt_dev_helper/cli/_cli_docs.py",
   "qt_dev_helper/cli/_cli_docs.py",
 ]
+run.branch = true
 paths.source = [
   "qt_dev_helper",
   "*/site-packages/qt_dev_helper",
@@ -139,10 +146,3 @@ report.exclude_lines = [
   "raise AssertionError",
   "raise NotImplementedError",
 ]
-
-# For now this is not used because pydoclint does not support toml when used with flake8
-[tool.interrogate]
-exclude = [ "docs", "tests" ]
-ignore-init-module = true
-ignore-regex = [ ".*QtToolNotFoundError.*", ".*QtToolExecutionError.*" ]
-fail-under = 100
