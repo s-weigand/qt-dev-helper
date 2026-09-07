@@ -99,7 +99,6 @@ def test_config_validate_path_exists_or_none(var_name: str, var_value: str):
 
 def test_config_path_extraction(dummy_config: Config):
     """Extract resolved paths from config."""
-
     base_path = dummy_config.base_path
 
     root_sass_file, root_qss_file = dummy_config.root_style_paths()
@@ -132,7 +131,6 @@ def test_config_path_extraction_exception(dummy_config: Config):
 
 def test_config_uic_kwargs(dummy_config: Config):
     """Kwargs for uic are same as in config."""
-
     expected: UicKwargs = {"generator": "python", "form_import": True, "uic_args": ["--idbased"]}
 
     assert dummy_config.uic_kwargs() == expected
@@ -140,7 +138,6 @@ def test_config_uic_kwargs(dummy_config: Config):
 
 def test_config_rcc_kwargs(dummy_config: Config):
     """Kwargs for rcc are same as in config."""
-
     expected: RccKwargs = {"generator": "python", "rcc_args": ["--compress-algo", "zlib"]}
 
     assert dummy_config.rcc_kwargs() == expected
@@ -198,7 +195,6 @@ def test_config_update_errors(dummy_config: Config):
 
 def test_load_toml_config(dummy_config: Config):
     """Load config from test toml config."""
-
     assert (
         load_toml_config(dummy_config.base_path / "pyproject.toml").model_dump()
         == dummy_config.model_dump()
@@ -248,7 +244,6 @@ def test_find_config_error(tmp_path: Path):
 @pytest.mark.parametrize("rel_path", ["", "assets/styles/theme.scss"])
 def test_load_config(dummy_config: Config, rel_path: str):
     """Load config also works when path is a file which isn't the config file."""
-
     result = load_config(dummy_config.base_path / rel_path)
 
     assert result.model_dump() == dummy_config.model_dump()

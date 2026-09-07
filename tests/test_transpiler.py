@@ -45,14 +45,13 @@ def clean_text(text: str) -> str:
 
 def generated_files_equal(result: Path, expected: Path):
     """Compare generated files."""
-    assert clean_text(result.read_text()) == clean_text(
-        expected.read_text()
-    ), f"{result=}\n{expected=}"
+    assert clean_text(result.read_text()) == clean_text(expected.read_text()), (
+        f"{result=}\n{expected=}"
+    )
 
 
 def test_transpile_sass(tmp_path: Path, dummy_config: Config):
     """Transpiling scss gives the expected result."""
-
     expected = (EXPECTED_TEST_DATA / "theme.qss").read_text()
 
     out_file = transpile_sass(INPUT_TEST_DATA / "styles/theme.scss", tmp_path / "theme.qss")
@@ -242,7 +241,6 @@ def test_build_all_assets_no_config(tmp_path: Path, capsys: CaptureFixture):
 )
 def test_build_all_assets_as_packaging_buildsystem(dummy_config: Config):
     """All resources are in the wheel."""
-
     pyproject_toml_path = dummy_config.base_path / "pyproject.toml"
 
     qt_dev_helper_requirement = f"qt-dev-helper@{REPO_ROOT.resolve().as_uri()}"

@@ -3,13 +3,11 @@ build-backend = "hatchling.build"
 requires = [ "hatchling" ]
 
 [project]
-
 name = "qt-dev-helper"
 description = "Toolbox to help develop Qt applications, improving the usability of the existing tooling."
 readme = "README.md"
 keywords = [ "qt_dev_helper" ]
 license = { file = "LICENSE" }
-
 authors = [ { name = "Sebastian Weigand", email = "s.weigand.phy@gmail.com" } ]
 requires-python = ">=3.9"
 classifiers = [
@@ -23,9 +21,9 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 dynamic = [ "version" ]
-
 dependencies = [
   "eval-type-backport; python_version<'3.10'",
   "pydantic>=2.0.2",
@@ -35,7 +33,7 @@ dependencies = [
   "tomli>=2.0.1",
 ]
 optional-dependencies.cli = [ "typer>=0.12.4" ]
-optional-dependencies.dev = [ "qt-dev-helper[docs,test,cli]" ]
+optional-dependencies.dev = [ "qt-dev-helper[cli,docs,test]" ]
 optional-dependencies.docs = [
   "autodoc-pydantic>=2.2",
   "myst-parser>=2",
@@ -65,18 +63,14 @@ urls.Documentation = "https://qt-dev-helper.readthedocs.io"
 urls.Homepage = "https://github.com/s-weigand/qt-dev-helper"
 urls.Source = "https://github.com/s-weigand/qt-dev-helper"
 urls.Tracker = "https://github.com/s-weigand/qt-dev-helper/issues"
-scripts."qt_dev_helper" = "qt_dev_helper.cli.main_app:app"
+scripts.qt_dev_helper = "qt_dev_helper.cli.main_app:app"
 
-[tool.hatch.version]
-path = "qt_dev_helper/__init__.py"
-
-[tool.hatch.build.targets.sdist]
-include = [ "/qt_dev_helper", "/tests" ]
-
-[tool.hatch.envs.default]
-features = [ "dev" ]
-python = "3.9"
-installer = "uv"
+[tool.hatch]
+version.path = "qt_dev_helper/__init__.py"
+build.targets.sdist.include = [ "/qt_dev_helper", "/tests" ]
+envs.default.python = "3.9"
+envs.default.installer = "uv"
+envs.default.features = [ "dev" ]
 
 [tool.docformatter]
 black = true
@@ -85,81 +79,70 @@ wrap-descriptions = 99
 
 [tool.pydoclint]
 skip-checking-short-docstrings = false
-style = 'numpy'
-exclude = '^(docs/|tests?/)'
+style = "numpy"
+exclude = "^(docs/|tests?/)"
 require-return-section-when-returning-nothing = false
 allow-init-docstring = true
 
-[tool.pytest.ini_options]
-addopts = [
+# For now this is not used because pydoclint does not support toml when used with flake8
+[tool.interrogate]
+fail-under = 100
+ignore-init-module = true
+ignore-regex = [ ".*QtToolExecutionError.*", ".*QtToolNotFoundError.*" ]
+exclude = [ "docs", "tests" ]
+
+[tool.mypy]
+exclude = "^docs/"
+ignore_missing_imports = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+warn_unused_ignores = true
+strict_equality = true
+plugins = "pydantic.mypy"
+scripts_are_modules = true
+warn_unused_configs = true
+overrides = [ { module = "tests.*", disallow_untyped_defs = false, disallow_incomplete_defs = false } ]
+show_error_codes = true
+
+[tool.pytest]
+ini_options.addopts = [
   "--cov=qt_dev_helper",
   "--cov-report=term",
   "--cov-report=xml",
   "--cov-report=html",
   "--cov-config=pyproject.toml",
 ]
-markers = [ "slow: marks tests as slow (deselect with '-m \"not slow\"')" ]
-env = [
+ini_options.markers = [ "slow: marks tests as slow (deselect with '-m \"not slow\"')" ]
+ini_options.env = [
   # prevent line wrapping in tests
   "TERMINAL_WIDTH=500",
   "_TYPER_FORCE_DISABLE_TERMINAL=1",
   "_TYPER_STANDARD_TRACEBACK=1",
 ]
 
-[tool.coverage.paths]
-source = [
+[tool.coverage]
+run.omit = [
+  "*/site-packages/qt_dev_helper/cli/_cli_docs.py",
+  "qt_dev_helper/cli/_cli_docs.py",
+]
+run.branch = true
+paths.source = [
   "qt_dev_helper",
   "*/site-packages/qt_dev_helper",
 ]
-[tool.coverage.run]
-branch = true
-omit = [
-  'qt_dev_helper/cli/_cli_docs.py',
-  '*/site-packages/qt_dev_helper/cli/_cli_docs.py',
-]
-
-[tool.coverage.report]
 # Regexes for lines to exclude from consideration
-exclude_lines = [
-  # Have to re-enable the standard pragma
-  'pragma: no cover',
-
+report.exclude_lines = [
   # Don't complain about missing debug-only code:
-  'def __repr__',
-  'if self\.debug',
-
-  # Don't complain if tests don't hit defensive assertion code:
-  'raise AssertionError',
-  'raise NotImplementedError',
-
+  "def __repr__",
+  "if __name__ == .__main__.:",
   # Don't complain if non-runnable code isn't run:
-  'if 0:',
-  'if __name__ == .__main__.:',
+  "if 0:",
+  "if self\\.debug",
   # only accessible during typechecking
-  'if TYPE_CHECKING:',
+  "if TYPE_CHECKING:",
+  # Have to re-enable the standard pragma
+  "pragma: no cover",
+  # Don't complain if tests don't hit defensive assertion code:
+  "raise AssertionError",
+  "raise NotImplementedError",
 ]
-
-[tool.mypy]
-plugins = "pydantic.mypy"
-exclude = "^docs/"
-ignore_missing_imports = true
-scripts_are_modules = true
-show_error_codes = true
-warn_unused_configs = true
-warn_unused_ignores = true
-strict_equality = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-
-[[tool.mypy.overrides]]
-module = "tests.*"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-
-# For now this is not used because pydoclint does not support toml when used with flake8
-
-[tool.interrogate]
-exclude = [ "docs", "tests" ]
-ignore-init-module = true
-ignore-regex = [ ".*QtToolNotFoundError.*", ".*QtToolExecutionError.*" ]
-fail-under = 100
