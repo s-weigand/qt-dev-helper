@@ -16,9 +16,7 @@ from pathlib import Path
 class QtToolNotFoundError(Exception):
     """Error thrown when a Qt tool can't be found.
 
-    See Also
-    --------
-    find_qt_tool
+    See Also -------- find_qt_tool
     """
 
     def __init__(self, tool_name: str) -> None:  # noqa: DOC
@@ -31,9 +29,7 @@ class QtToolNotFoundError(Exception):
 class QtToolExecutionError(Exception):
     """Error thrown when a Qt tool returns a non-zero exit status code.
 
-    See Also
-    --------
-    call_qt_tool
+    See Also -------- call_qt_tool
     """
 
     def __init__(  # noqa: DOC
@@ -50,10 +46,7 @@ class QtToolExecutionError(Exception):
 def extend_qt_tool_path() -> str:
     """Prepend path variable with package dirs to qt-tools if present.
 
-    Returns
-    -------
-    str
-        Path extended with library executable paths.
+    Returns ------- str     Path extended with library executable paths.
     """
     additional_paths: list[str] = []
     tool_packages = {
